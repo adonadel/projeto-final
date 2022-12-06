@@ -2,15 +2,12 @@ package model;
 
 import java.time.LocalDate;
 
-public class Users {
+public class Budgets_type {
     private Integer id;
     private String name;
-    private String username;
-    private String password;
-    private Integer type;
+    private Integer active;
     private LocalDate created;
     private LocalDate modified;
-    private Sectors sector;
 
     public Integer getId() {
         return id;
@@ -28,28 +25,12 @@ public class Users {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getActive() {
+        return active;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
+    public void setActive(Integer active) {
+        this.active = active;
     }
 
     public LocalDate getCreated() {
@@ -66,13 +47,5 @@ public class Users {
 
     public void setModified(LocalDate modified) {
         this.modified = modified;
-    }
-
-    public Sectors getSector() {
-        return sector;
-    }
-
-    public void setSector(Sectors sector) {
-        this.sector = sector;
     }
 }
