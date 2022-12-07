@@ -1,13 +1,24 @@
+import model.Sectors;
 import model.Users;
+import repository.SectorsDAO;
+
 import javax.swing.*;
+
+import static java.lang.Integer.parseInt;
+
 public class AppMain {
 
     public static void main(String[] args) {
-
+        initAll();
         callLogin();
 
     }
 
+
+    private static void initAll() {
+        SectorsDAO.initSectors();
+
+    }
 
     private static void callLogin(){
         String login = JOptionPane.showInputDialog(null, "Informe o login do usuário ",
@@ -46,8 +57,18 @@ public class AppMain {
     }
 
     private static void callMenuUsers(){
+
+        // chamando select de nome de setores
+        Object[] namesSectors = SectorsDAO.findSectorsInArrayWithId();
+        Object nameSector = JOptionPane.showInputDialog(null, "Selecione o setor: ",
+                "Menu Usuários", JOptionPane.QUESTION_MESSAGE, null, namesSectors, namesSectors[0]);
+        String[] split = nameSector.toString().split(" - ");
+        int sectorId = parseInt(split[0]);
+        Sectors sectors = SectorsDAO.findSectorsById(sectorId);
+        // chamando select de nome de setores
+
         String[] optionsMenuUsers = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
-        int menuUsers = JOptionPane.showOptionDialog(null, "Selecione uma ação para Usuários",
+        int menuUsers = JOptionPane.showOptionDialog(null, "Selecione uma ação para Usuários do setor (" + nameSector + ")",
                 "Menu Usuários (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuUsers, optionsMenuUsers[0]);
 
@@ -155,8 +176,18 @@ public class AppMain {
     }
 
     private static void callMenuBudgets(){
+
+        // chamando select de nome de setores
+        Object[] namesSectors = SectorsDAO.findSectorsInArrayWithId();
+        Object nameSector = JOptionPane.showInputDialog(null, "Selecione o setor: ",
+                "Menu Orçamentos", JOptionPane.QUESTION_MESSAGE, null, namesSectors, namesSectors[0]);
+        String[] split = nameSector.toString().split(" - ");
+        int sectorId = parseInt(split[0]);
+        Sectors sectors = SectorsDAO.findSectorsById(sectorId);
+        // chamando select de nome de setores
+
         String[] optionsMenuBudgests = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
-        int menuBudgests = JOptionPane.showOptionDialog(null, "Selecione uma ação para Orçamentos",
+        int menuBudgests = JOptionPane.showOptionDialog(null, "Selecione uma ação para Orçamentos do setor (" + nameSector + ")",
                 "Menu Orçamentos (Qualquer usuário)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuBudgests, optionsMenuBudgests[0]);
 
