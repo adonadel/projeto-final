@@ -2,12 +2,11 @@ package model;
 
 import java.time.LocalDate;
 
-public class Budgets_type {
+public class Exercise {
     private Integer id;
-    private String name;
+    private Integer year;
+    private Integer status;
     private Integer active;
-    private LocalDate created;
-    private LocalDate modified;
 
     public Integer getId() {
         return id;
@@ -17,12 +16,20 @@ public class Budgets_type {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getActive() {
@@ -48,4 +55,16 @@ public class Budgets_type {
     public void setModified(LocalDate modified) {
         this.modified = modified;
     }
+
+    public Budget getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Budget budget) {
+        this.budget = budget;
+    }
+
+    private LocalDate created;
+    private LocalDate modified;
+    private Budget budget;
 }
