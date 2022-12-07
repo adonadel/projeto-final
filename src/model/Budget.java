@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
-public class Budgets {
+public class Budget {
     private Integer id;
     private String name;
     private String item;
@@ -79,19 +79,19 @@ public class Budgets {
         this.modified = modified;
     }
 
-    public Sectors getSector() {
+    public Sector getSector() {
         return sector;
     }
 
-    public void setSector(Sectors sector) {
+    public void setSector(Sector sector) {
         this.sector = sector;
     }
 
-    public Budgets_type getBudget_type() {
+    public Budget_type getBudget_type() {
         return budget_type;
     }
 
-    public void setBudget_type(Budgets_type budget_type) {
+    public void setBudget_type(Budget_type budget_type) {
         this.budget_type = budget_type;
     }
 
@@ -101,6 +101,6 @@ public class Budgets {
     private Integer active;
     private LocalDate created;
     private LocalDate modified;
-    private Sectors sector;
-    private Budgets_type budget_type;
+    private Sector sector;
+    private Budget_type budget_type;
 }
