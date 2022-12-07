@@ -48,7 +48,7 @@ public class SectorRepository {
         return sectors;
     }
 
-    public List<Sector> buscaPorId (int id) throws SQLException, ClassNotFoundException {
+    public List<Sector> searchById (int id) throws SQLException, ClassNotFoundException {
         List<Sector> sectors = new ArrayList<>();
         Connection connection = getConnection();
 
