@@ -49,7 +49,11 @@ public class ReportExerciseForm extends JPanel{
                     public void windowClosing(WindowEvent evt) {
                         frame.setVisible(false);
 
-                        AppMain.callMenuReports();
+                        try {
+                            AppMain.callMenuReports();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
 

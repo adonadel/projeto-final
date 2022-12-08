@@ -91,7 +91,7 @@ public class AppMain {
         ReportUserForm.emitirRelatorio(users);
     }
 
-    public static void callMenuReports() {
+    public static void callMenuReports() throws Exception {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
         int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
