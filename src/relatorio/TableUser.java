@@ -58,7 +58,7 @@ public class TableUser extends AbstractTableModel {
                 case INDEX_MODIFIED:
                     return registroUser.getModified();
                 case INDEX_SECTOR:
-                    return registroUser.getSector();
+                    return registroUser.getSector().getName();
                 default:
                     return new Object();
             }
@@ -74,18 +74,4 @@ public class TableUser extends AbstractTableModel {
             return nomeColunas.length;
         }
 
-    /*@Override
-    public int getRowCount() {
-        return 0;
-    }
-
-    @Override
-    public int getColumnCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        return null;
-    }*/
 }
