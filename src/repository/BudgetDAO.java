@@ -75,21 +75,21 @@ public class BudgetDAO {
         return budget;
     }
 
-    public Budget searchByName(String name) {
+    public List<Budget> searchByName(String name) {
         BudgetRepository budgetRepository = new BudgetRepository();
-        List<Budget> budget = new Budget();
+        List<Budget> auxBudget = new ArrayList<>();
         try{
             budgets = budgetRepository.searchByName(name);
 
-            for (Budget auxBudget : budgets){
-                if (auxBudget.getName().equals(name)) {
-                    budgets.add(auxBudget);
+            for (Budget budget : budgets){
+                if (budget.getName().equals(name)) {
+                    budgets.add(budget);
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return budget;
+        return auxBudget;
     }
 
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {

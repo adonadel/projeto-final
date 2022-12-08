@@ -75,6 +75,24 @@ public class BudgetTypeDAO {
         return budgetType;
     }
 
+        public List<BudgetType> searchByName(String name) {
+        BudgetTypeRepository budgetTypeRepository = new BudgetTypeRepository();
+        List<BudgetType> ListBudgetTypes = new ArrayList<>();
+
+        try{
+            budgetTypes = budgetTypeRepository.searchByName(name);
+
+            for (BudgetType auxBudgetType : budgetTypes){
+                if (auxBudgetType.getName().equals(name)) {
+                    ListBudgetTypes.add(auxBudgetType);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return ListBudgetTypes;
+    }
+
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
         BudgetTypeRepository budgetTypeRepository = new BudgetTypeRepository();
         ArrayList<String> names = new ArrayList<>();

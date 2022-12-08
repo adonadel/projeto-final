@@ -45,8 +45,6 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
-            budget.setCreated(resultSet.getDate(4).toLocalDate());
-            budget.setModified(resultSet.getDate(5).toLocalDate());
             budgets.add(budget);
         }
         connection.close();
@@ -66,8 +64,6 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
-            budget.setCreated(resultSet.getDate(4).toLocalDate());
-            budget.setModified(resultSet.getDate(5).toLocalDate());
             budgets.add(budget);
         }
         connection.close();
@@ -87,8 +83,6 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
-            budget.setCreated(resultSet.getDate(4).toLocalDate());
-            budget.setModified(resultSet.getDate(5).toLocalDate());
             budgets.add(budget);
         }
         connection.close();
@@ -112,7 +106,8 @@ public class BudgetTypeRepository {
         PreparedStatement stmt = connection.prepareStatement("update budgets_type SET name = ?, password = ?, modified = ? WHERE id = ?");
         stmt.setString(1, budget.getName());
         stmt.setInt(2, budget.getActive());
-        stmt.setString(3, LocalDateTime.now().toString());
+        stmt.setString(3, budget.getModified().toString());
+        stmt.setInt(4, budget.getId());
 
         int i = stmt.executeUpdate();
         System.out.println(i + " linhas atualizadas");

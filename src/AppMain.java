@@ -45,14 +45,13 @@ public class AppMain {
                 callMenuEntities();
                 break;
             case 1:
-
+                callMenuReports();
                 break;
             case 2:
                 callLogin();
                 break;
         }
     }
-
 
     private static void callMenuEntities() throws Exception {
 
@@ -62,29 +61,33 @@ public class AppMain {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
-                callMenuUsers();
-                callMenuEntities();
+//                callUsersReports();
+                callMenuReports();
                 break;
             case 1:
-                callMenuSectors();
-                callMenuEntities();
+//                callSectorReports();
+                callMenuReports();
                 break;
             case 2:
-                callMenuExercises();
-                callMenuEntities();
+//                callExercisesReports();
+                callMenuReports();
                 break;
             case 3:
+//                callBudgetsReports();
                 callMenuBudgets();
-                callMenuEntities();
+                callMenuReports();
                 break;
             case 4:
-                callMenuTypesBudgets();
-                callMenuEntities();
+//                callTypesBudgetsReports();
+                callMenuReports();
                 break;
             case 5:
                 callMenuOptions();
                 break;
         }
+    }
+
+    public static void callMenuReports() {
     }
 
     private static void callMenuUsers() throws Exception {
@@ -369,37 +372,69 @@ public class AppMain {
 
             }
 
-//            private static Budget callCreateBudget(){
-//                Budget budget = new Budget();
-//
-//                String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", "Cadastro orçamento");
-//                String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", "Cadastro orçamento");
-//                Integer qnt = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", "Cadastro orçamento"));
-//                Double untVal = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor unitário do item: ", "Cadastro orçamento"));
-//
-//                return budget;
-//            }
-//
-//            private static Budget callUpdateBudget(Budget budget){
-//
-//                Integer year = Integer.valueOf(JOptionPane.showInputDialog(null, "Informe o ano do Exercício: ",
-//                        budget.getYear()));
-//
-//                Object[] arrayStatus = BudgetStatus.getEnumArray();
-//
-//                Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do Setor: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[budget.getStatus()]);
-//                Integer status = BudgetStatus.getEnumIntValue(auxStatus);
-//
-//                Object[] optionsActive = {0, 1};
-//                Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Exercício: ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[budget.getActive()]);
-//
-//                budget.setYear(year);
-//                budget.setStatus(status);
-//                budget.setActive(active);
-//                budget.setModified(LocalDateTime.now());
-//
-//                return budget;
-//            }
+            private static Budget callCreateBudget() throws SQLException, ClassNotFoundException {
+                Budget budget = new Budget();
+
+                String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE);
+                String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE);
+                Integer qnt = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE));
+                Double untVal = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor unitário do item: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE));
+
+                Object[] arrayStatus = BudgetStatus.getEnumArray();
+
+                Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do orçamento: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[2]);
+                Integer status = BudgetStatus.getEnumIntValue(auxStatus);
+
+                Object[] sectors = getSectorDAO().searchAllOnlyWithName();
+
+                Object selectionSetor = JOptionPane.showInputDialog(null, "Informe o setor do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, sectors, sectors[0]);
+                List<Sector> auxSectors = getSectorDAO().searchByName((String) selectionSetor);
+                Sector sector = auxSectors.get(0);
+
+                Object[] budgetTypes = getBudgetTypeDAO().searchAllOnlyWithName();
+
+                Object selectionBudgetType = JOptionPane.showInputDialog(null, "Informe o tipo do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, budgetTypes, budgetTypes[0]);
+                List<BudgetType> auxBudgetType = getBudgetTypeDAO().searchByName((String) selectionBudgetType);
+                BudgetType budgetType = auxBudgetType.get(0);
+
+                budget.setName(name);
+                budget.setItem(item);
+                budget.setQnt(qnt);
+                budget.setUntVal(untVal);
+                budget.setStatus(status);
+                budget.setActive(1);
+                budget.setCreated(LocalDateTime.now());
+                budget.setModified(LocalDateTime.now());
+                budget.setSector(sector);
+                budget.setBudgetType(budgetType);
+
+                return budget;
+            }
+
+            private static Budget callUpdateBudget(Budget budget){
+
+                String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", budget.getName());
+                String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", budget.getItem());
+                Integer qnt = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", budget.getQnt()));
+                Double untVal = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor unitário do item: ", budget.getUntVal()));
+
+                Object[] arrayStatus = BudgetStatus.getEnumArray();
+
+                Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do orçamento: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[budget.getStatus()]);
+                Integer status = BudgetStatus.getEnumIntValue(auxStatus);
+
+                Integer active = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", budget.getActive()));
+
+                budget.setName(name);
+                budget.setItem(item);
+                budget.setQnt(qnt);
+                budget.setUntVal(untVal);
+                budget.setStatus(status);
+                budget.setActive(active);
+                budget.setModified(LocalDateTime.now());
+
+                return budget;
+            }
 
             private static Budget selectBudget() throws SQLException, ClassNotFoundException {
                 Object[] selectionValues = getBudgetDAO().searchAllReturnArray();
@@ -416,20 +451,27 @@ public class AppMain {
                 "Menu Tipos Orçamentos",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuTypesBudgets, optionsMenuTypesBudgets[0]);
 
+        BudgetType budgetType;
         switch (menuTypesBudgets) {
-            case 0:
-                //novo
+            case 0: //novo
+                budgetType = callCreateBudgeType();
+                getBudgetTypeDAO().save(budgetType);
+                callMenuTypesBudgets();
                 break;
-            case 1:
-                //editar
+            case 1: //editar
+                    budgetType = selectBudgetType();
+                    callUpdateBudgetType(budgetType);
+                    callMenuTypesBudgets();
                 break;
-            case 2:
-                //excluir
+            case 2: //excluir
+                budgetType = selectBudgetType();
+                getBudgetTypeDAO().remove(budgetType);
+
+                callMenuTypesBudgets();
                 break;
             case 3:
-                callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
-                break;
+               callMenuEntities();
+               break;
         }
 
     }
@@ -462,13 +504,13 @@ public class AppMain {
         return budgetType;
     }
 
-    private static Sector selectBudgetType() throws SQLException, ClassNotFoundException {
+    private static BudgetType selectBudgetType() throws SQLException, ClassNotFoundException {
         Object[] selectionValues = getBudgetTypeDAO().searchAllReturnArray();
         String initialSelection = (String) selectionValues[0];
         Object selection = JOptionPane.showInputDialog(null, "Selecione um tipo de orçamento",
                 null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
-        List<BudgetType> budgetTypes = getSectorDAO().searchByName((String) selection);
-        return sectors.get(0);
+        List<BudgetType> budgetTypes = getBudgetTypeDAO().searchByName((String) selection);
+        return budgetTypes.get(0);
     }
 
     public static UserDAO getUserDAO() {
@@ -494,8 +536,5 @@ public class AppMain {
     public static BudgetTypeDAO getBudgetTypeDAO() {
         BudgetTypeDAO budgetTypeDAO = new BudgetTypeDAO();
         return budgetTypeDAO;
-    }
-
-    public static void callMenuReports() {
     }
 }

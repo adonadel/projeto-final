@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Budget {
     private Integer id;
@@ -10,8 +10,8 @@ public class Budget {
     private Double untVal;
     private Integer status;
     private Integer active;
-    private LocalDate created;
-    private LocalDate modified;
+    private LocalDateTime created;
+    private LocalDateTime modified;
     private Sector sector;
     private BudgetType budgetType;
 
@@ -71,19 +71,19 @@ public class Budget {
         this.active = active;
     }
 
-    public LocalDate getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDate created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public LocalDate getModified() {
+    public LocalDateTime getModified() {
         return modified;
     }
 
-    public void setModified(LocalDate modified) {
+    public void setModified(LocalDateTime modified) {
         this.modified = modified;
     }
 

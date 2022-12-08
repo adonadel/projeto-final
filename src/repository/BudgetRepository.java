@@ -4,6 +4,7 @@ package repository;
 import model.Budget;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,8 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
             budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
@@ -81,8 +82,8 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
             budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
@@ -108,8 +109,8 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
             budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
