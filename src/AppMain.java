@@ -61,7 +61,7 @@ public class AppMain {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
-//                callUsersReports();
+                callUsersReports();
                 callMenuReports();
                 break;
             case 1:
@@ -74,7 +74,6 @@ public class AppMain {
                 break;
             case 3:
 //                callBudgetsReports();
-                callMenuBudgets();
                 callMenuReports();
                 break;
             case 4:
@@ -85,6 +84,11 @@ public class AppMain {
                 callMenuOptions();
                 break;
         }
+    }
+
+    private static void callUsersReports() throws SQLException, ClassNotFoundException {
+        List<User> users = getUserDAO().searchAll();
+        ReportUserForm.emitirRelatorio(users);
     }
 
     public static void callMenuReports() {
@@ -459,9 +463,9 @@ public class AppMain {
                 callMenuTypesBudgets();
                 break;
             case 1: //editar
-                    budgetType = selectBudgetType();
-                    callUpdateBudgetType(budgetType);
-                    callMenuTypesBudgets();
+                budgetType = selectBudgetType();
+                callUpdateBudgetType(budgetType);
+                callMenuTypesBudgets();
                 break;
             case 2: //excluir
                 budgetType = selectBudgetType();

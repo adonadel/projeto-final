@@ -1,5 +1,6 @@
-import model.Budget;
-import relatorio.TableBudget;
+
+import model.BudgetType;
+import relatorio.TableBudgetType;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -9,7 +10,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Vector;
 
-public class ReportBudgetForm  extends JPanel{
+public class ReportBudgetTypeForm extends JPanel{
         private static final long serialVersionUID = 1L;
 
         public static final String[] nomeColunas =
@@ -17,21 +18,21 @@ public class ReportBudgetForm  extends JPanel{
 
         protected JTable table;
         protected JScrollPane scroller;
-        protected TableBudget tabela;
+        protected TableBudgetType tabela;
 
-        public ReportBudgetForm(Vector<Budget> vetorDados) {
+        public ReportBudgetTypeForm(Vector<BudgetType> vetorDados) {
             iniciarComponentes(vetorDados);
         }
 
-        public void iniciarComponentes(Vector<Budget> vetorDados) {
-            tabela = new TableBudget(nomeColunas, vetorDados);
+        public void iniciarComponentes(Vector<BudgetType> vetorDados) {
+            tabela = new TableBudgetType(nomeColunas, vetorDados);
             table = new JTable();
             table.setModel(tabela);
             table.setSurrendersFocusOnKeystroke(true);
             scroller = new JScrollPane(table);
             table.setPreferredScrollableViewportSize(new Dimension(500, 300));
 
-            TableColumn colunaEscondida = table.getColumnModel().getColumn(TableBudget.INDEX_ESCONDIDO);
+            TableColumn colunaEscondida = table.getColumnModel().getColumn(TableBudgetType.INDEX_ESCONDIDO);
             colunaEscondida.setMinWidth(2);
             colunaEscondida.setPreferredWidth(2);
             colunaEscondida.setMaxWidth(2);
@@ -39,7 +40,7 @@ public class ReportBudgetForm  extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<Budget> sector) {
+        public static void emitirRelatorio(List<BudgetType> sector) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 JFrame frame = new JFrame("Relatório - Tipo de Orçamento");
@@ -51,12 +52,12 @@ public class ReportBudgetForm  extends JPanel{
                     }
                 });
 
-                Vector<Budget> vetorDados = new Vector<Budget>();
+                Vector<BudgetType> vetorDados = new Vector<BudgetType>();
                 /*for (Sector sector : sectors) {
                     vetorDados.add(sector);
                 }*/ //Validar
 
-                frame.getContentPane().add(new ReportBudgetForm(vetorDados));
+                frame.getContentPane().add(new ReportBudgetTypeForm(vetorDados));
                 frame.pack();
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
