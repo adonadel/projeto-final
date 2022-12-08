@@ -1,6 +1,7 @@
 package repository;
 
 import model.BudgetType;
+import model.Sector;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,9 +47,9 @@ public class BudgetTypeDAO {
         List<BudgetType> filtredBudgetTypes = new ArrayList<>();
 
         try{
-            budgetsType = budgetRepository.searchByName(name);
+            budgetTypes = budgetRepository.searchByName(name);
 
-            for (BudgetType budget : budgetsType){
+            for (BudgetType budgetType : budgetTypes){
                 filtredBudgetTypes.add(budgetType);
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -105,5 +106,16 @@ public class BudgetTypeDAO {
         }
 
         return budgetTypesName.toArray();
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<BudgetType> budgetTypes = searchAll();
+        List<String> budgetTypesNomes = new ArrayList<>();
+
+        for (BudgetType budgetType : budgetTypes) {
+            budgetTypesNomes.add(budgetType.getName());
+        }
+
+        return budgetTypesNomes.toArray();
     }
 }

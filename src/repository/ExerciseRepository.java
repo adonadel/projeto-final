@@ -3,6 +3,7 @@ package repository;
 import model.Exercise;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,20 +46,20 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(resultSet.getDate(4).toLocalDate());
-            exercise.setModified(resultSet.getDate(5).toLocalDate());
+            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
+            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
             exercises.add(exercise);
         }
         connection.close();
         return exercises;
     }
 
-        public List<Exercise> searchByName (String name) throws SQLException, ClassNotFoundException {
+        public List<Exercise> searchByYear (Integer year) throws SQLException, ClassNotFoundException {
         List<Exercise> exercises = new ArrayList<>();
         Connection connection = getConnection();
 
-        PreparedStatement stmt = connection.prepareStatement("select * from exercises WHERE name = ?");
-        stmt.setString(1, name);
+        PreparedStatement stmt = connection.prepareStatement("select * from exercises WHERE year = ?");
+        stmt.setInt(1, year);
         ResultSet resultSet = stmt.executeQuery();
 
         while (resultSet.next()){
@@ -66,8 +67,8 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(resultSet.getDate(4).toLocalDate());
-            exercise.setModified(resultSet.getDate(5).toLocalDate());
+            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
+            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
             exercises.add(exercise);
         }
         connection.close();
@@ -87,8 +88,8 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(resultSet.getDate(4).toLocalDate());
-            exercise.setModified(resultSet.getDate(5).toLocalDate());
+            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
+            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
             exercises.add(exercise);
         }
         connection.close();

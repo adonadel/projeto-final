@@ -1,14 +1,14 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Exercise {
     private Integer id;
     private Integer year;
     private Integer status;
     private Integer active;
-    private LocalDate created;
-    private LocalDate modified;
+    private LocalDateTime created;
+    private LocalDateTime modified;
     private Budget budget;
 
     public Integer getId() {
@@ -43,19 +43,19 @@ public class Exercise {
         this.active = active;
     }
 
-    public LocalDate getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDate created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public LocalDate getModified() {
+    public LocalDateTime getModified() {
         return modified;
     }
 
-    public void setModified(LocalDate modified) {
+    public void setModified(LocalDateTime modified) {
         this.modified = modified;
     }
 

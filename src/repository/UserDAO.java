@@ -1,5 +1,6 @@
 package repository;
 
+import model.Sector;
 import model.User;
 
 import java.sql.SQLException;
@@ -31,8 +32,6 @@ public final class UserDAO{
     }
 
     public List<User> searchAll() throws SQLException, ClassNotFoundException {
-        System.out.println(users);
-
         UserRepository userRepository = new UserRepository();
         try{
             users = userRepository.search();
@@ -43,12 +42,37 @@ public final class UserDAO{
         return users;
     }
 
-    public List<User> searchWithName(String name) {
-        List<User> filtredUsers = new ArrayList<>();
-        for (User user : users){
-            if (user.getName().contains(name)) {
-                filtredUsers.add(user);
+    public List<User> searchByName(String name) {
+        UserRepository userRepository = new UserRepository();
+        List<User> ListUsers = new ArrayList<>();
+
+        try{
+            users = userRepository.searchByName(name);
+
+            for (User auxUser : users){
+                if (auxUser.getName().equals(name)) {
+                    ListUsers.add(auxUser);
+                }
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return ListUsers;
+    }
+
+    public List<User> searchWithName(String name) {
+        UserRepository userRepository = new UserRepository();
+        List<User> filtredUsers = new ArrayList<>();
+        try{
+            users = userRepository.searchByName(name);
+
+            for (User user : users){
+                if (user.getName().contains(name)) {
+                    filtredUsers.add(user);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return filtredUsers;
     }
@@ -68,6 +92,23 @@ public final class UserDAO{
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    public List<User> searchBySectorId(Integer sectorId) {
+        UserRepository userRepository = new UserRepository();
+        List<User> auxUsers = new ArrayList<>();
+        try{
+            users = userRepository.searchBySectorId(sectorId);
+
+            for (User user : users){
+                if (user.getSector().getId().equals(sectorId)) {
+                    auxUsers.add(user);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return auxUsers;
     }
 
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
@@ -101,5 +142,28 @@ public final class UserDAO{
         }
 
         return usersName.toArray();
+    }
+
+    public User checkUserAuth(String username, String password) {
+        UserRepository userRepository = new UserRepository();
+        User user;
+        try {
+            user = userRepository.searchByUsernamePassword(username, password);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return user;
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<User> users = searchAll();
+        List<String> usersNames = new ArrayList<>();
+
+        for (User user : users) {
+            usersNames.add(user.getName());
+        }
+
+        return usersNames.toArray();
     }
 }

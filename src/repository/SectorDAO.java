@@ -1,8 +1,10 @@
 package repository;
 
+import jdk.nashorn.internal.scripts.JO;
 import model.Sector;
 import model.User;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +29,18 @@ public final class SectorDAO{
         sectors.add(sector);
     }
 
-    public void remove(Sector sector) throws Exception {
+    public void remove(Sector sector) throws SQLException, ClassNotFoundException {
         UserRepository userRepository = new UserRepository();
         SectorRepository sectorRepository = new SectorRepository();
-        List<User> users = userRepository.searchBySectorId();
+        List<User> users = userRepository.searchBySectorId(sector.getId());
         if(users.size() == 0) {
             sectorRepository.delete(sector);
         }else {
-            throw new Exception("Setor em uso! Impossível excluir");
+            JOptionPane.showMessageDialog(null, "Setor em uso! Impossível excluir.", "Exclusão de setor", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public List<Sector> searchAll() throws SQLException, ClassNotFoundException {
-        System.out.println(sectors);
-
         SectorRepository sectorRepository = new SectorRepository();
         try{
             sectors = sectorRepository.search();
@@ -83,6 +83,24 @@ public final class SectorDAO{
         return sector;
     }
 
+    public List<Sector> searchByName(String name) {
+        SectorRepository sectorRepository = new SectorRepository();
+        List<Sector> ListSectors = new ArrayList<>();
+
+        try{
+            sectors = sectorRepository.searchByName(name);
+
+            for (Sector auxSector : sectors){
+                if (auxSector.getName().equals(name)) {
+                    ListSectors.add(auxSector);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return ListSectors;
+    }
+
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
         SectorRepository sectorRepository = new SectorRepository();
         ArrayList<String> names = new ArrayList<>();
@@ -114,5 +132,16 @@ public final class SectorDAO{
         }
 
         return sectorsName.toArray();
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<Sector> sectors = searchAll();
+        List<String> sectorsNomes = new ArrayList<>();
+
+        for (Sector sector : sectors) {
+            sectorsNomes.add(sector.getName());
+        }
+
+        return sectorsNomes.toArray();
     }
 }

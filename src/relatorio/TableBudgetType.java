@@ -1,6 +1,6 @@
 package relatorio;
 
-import model.Budget_type;
+import model.BudgetType;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Vector;

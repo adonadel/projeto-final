@@ -48,13 +48,7 @@ public class ReportSectorForm extends JPanel{
                 frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent evt) {
                         frame.setVisible(false);
-                        try {
-                            AppMain.chamaMenuRelatorios(); /*Verificar na Main*/
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        AppMain.callMenuReports();
                     }
                 });
 
