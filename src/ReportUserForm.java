@@ -39,7 +39,7 @@ public class ReportUserForm extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<User> sector) {
+        public static void emitirRelatorio(List<User> users) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 JFrame frame = new JFrame("Relatório - Usuários");
@@ -56,9 +56,9 @@ public class ReportUserForm extends JPanel{
                 });
 
                 Vector<User> vetorDados = new Vector<User>();
-                /*for (Sector sector : sectors) {
-                    vetorDados.add(sector);
-                }*/ //Validar
+                for (User user : users) {
+                    vetorDados.add(user);
+                }
 
                 frame.getContentPane().add(new ReportUserForm(vetorDados));
                 frame.pack();
