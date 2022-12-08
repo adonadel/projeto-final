@@ -87,11 +87,11 @@ public class Budget {
         this.sector = sector;
     }
 
-    public Budget_type getBudget_type() {
+    public BudgetType getBudget_type() {
         return budget_type;
     }
 
-    public void setBudget_type(Budget_type budget_type) {
+    public void setBudget_type(BudgetType budget_type) {
         this.budget_type = budget_type;
     }
 
@@ -102,5 +102,5 @@ public class Budget {
     private LocalDate created;
     private LocalDate modified;
     private Sector sector;
-    private Budget_type budget_type;
+    private BudgetType budget_type;
 }

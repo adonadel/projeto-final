@@ -1,8 +1,8 @@
 package repository;
 
 import model.Sector;
+import model.User;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,15 @@ public final class SectorDAO{
         sectors.add(sector);
     }
 
-    public void remove(Sector sector) throws SQLException, ClassNotFoundException {
+    public void remove(Sector sector) throws Exception {
+        UserRepository userRepository = new UserRepository();
         SectorRepository sectorRepository = new SectorRepository();
-        sectorRepository.delete(sector);
+        List<User> users = userRepository.searchBySectorId();
+        if(users.size() == 0) {
+            sectorRepository.delete(sector);
+        }else {
+            throw new Exception("Setor em uso! Impossível excluir");
+        }
     }
 
     public List<Sector> searchAll() throws SQLException, ClassNotFoundException {
@@ -46,11 +52,16 @@ public final class SectorDAO{
     }
 
     public List<Sector> searchWithName(String name) {
+        SectorRepository sectorRepository = new SectorRepository();
         List<Sector> filtredSectors = new ArrayList<>();
-        for (Sector sector : sectors){
-            if (sector.getName().contains(name)) {
+        try{
+            sectors = sectorRepository.searchByName(name);
+
+            for (Sector sector : sectors){
                 filtredSectors.add(sector);
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return filtredSectors;
     }
@@ -87,6 +98,7 @@ public final class SectorDAO{
 
         return names.toArray();
     }
+
     public Object[] searchAllWithIdOnName() {
         SectorRepository sectorRepository = new SectorRepository();
         List<String> sectorsName = new ArrayList<>();
