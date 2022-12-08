@@ -6,6 +6,14 @@ public class Budget {
     private Integer id;
     private String name;
     private String item;
+    private Integer qnt;
+    private Double unt_val;
+    private Integer status;
+    private Integer active;
+    private LocalDate created;
+    private LocalDate modified;
+    private Sector sector;
+    private Budget_type budget_type;
 
     public Integer getId() {
         return id;
@@ -94,13 +102,4 @@ public class Budget {
     public void setBudget_type(BudgetType budget_type) {
         this.budget_type = budget_type;
     }
-
-    private Integer qnt;
-    private Double unt_val;
-    private Integer status;
-    private Integer active;
-    private LocalDate created;
-    private LocalDate modified;
-    private Sector sector;
-    private BudgetType budget_type;
 }

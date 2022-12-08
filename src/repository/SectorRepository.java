@@ -4,6 +4,7 @@ import model.Sector;
 import model.User;
 
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 public class SectorRepository {
@@ -21,8 +22,8 @@ public class SectorRepository {
         stmt.setNull(1, 1);
         stmt.setString(2, sector.getName());
         stmt.setInt(3, sector.getActive());
-        stmt.setString(4, sector.getCreated().toString());
-        stmt.setString(5, sector.getModified().toString());
+        stmt.setString(4,  DateTimeFormatter.ISO_LOCAL_DATE.format(sector.getCreated()));
+        stmt.setString(5, DateTimeFormatter.ISO_LOCAL_DATE.format(sector.getModified()));
 
 
         int i = stmt.executeUpdate();
@@ -35,6 +36,25 @@ public class SectorRepository {
         Connection connection = getConnection();
 
         PreparedStatement stmt = connection.prepareStatement("select * from sectors");
+        ResultSet resultSet = stmt.executeQuery();
+
+        while (resultSet.next()){
+            Sector sector = new Sector();
+            sector.setId(resultSet.getInt(1));
+            sector.setName(resultSet.getString(2));
+            sector.setActive(resultSet.getInt(3));
+            sectors.add(sector);
+        }
+        connection.close();
+        return sectors;
+    }
+
+    public List<Sector> searchByName (String name) throws SQLException, ClassNotFoundException {
+        List<Sector> sectors = new ArrayList<>();
+        Connection connection = getConnection();
+
+        PreparedStatement stmt = connection.prepareStatement("select * from sectors WHERE name = ?");
+        stmt.setString(1, name);
         ResultSet resultSet = stmt.executeQuery();
 
         while (resultSet.next()){

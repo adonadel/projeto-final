@@ -7,6 +7,9 @@ public class Exercise {
     private Integer year;
     private Integer status;
     private Integer active;
+    private LocalDate created;
+    private LocalDate modified;
+    private Budget budget;
 
     public Integer getId() {
         return id;
@@ -64,7 +67,5 @@ public class Exercise {
         this.budget = budget;
     }
 
-    private LocalDate created;
-    private LocalDate modified;
-    private Budget budget;
+
 }

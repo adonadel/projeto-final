@@ -56,7 +56,29 @@ public class UserRepository {
         return users;
     }
 
-    public List<User> buscaPorId (int id) throws SQLException, ClassNotFoundException {
+    public List<User> searchByName (String name) throws SQLException, ClassNotFoundException {
+        List<User> users = new ArrayList<>();
+        Connection connection = getConnection();
+
+        PreparedStatement stmt = connection.prepareStatement("select * from users WHERE name = ?");
+        stmt.setString(1, name);
+        ResultSet resultSet = stmt.executeQuery();
+
+        while (resultSet.next()){
+            User user = new User();
+            user.setId(resultSet.getInt(1));
+            user.setName(resultSet.getString(2));
+            user.setUsername(resultSet.getString(3));
+            user.setPassword(resultSet.getString(4));
+            user.setType(resultSet.getInt(5));
+            user.setSector((Sector) resultSet.getObject(6));
+            users.add(user);
+        }
+        connection.close();
+        return users;
+    }
+
+    public List<User> searchById (int id) throws SQLException, ClassNotFoundException {
         List<User> users = new ArrayList<>();
         Connection connection = getConnection();
 
@@ -107,5 +129,27 @@ public class UserRepository {
         stmt.setInt(1, user.getId());
         stmt.executeUpdate();
         connection.close();
+    }
+
+    public List<User> searchBySectorId(Integer id) throws SQLException, ClassNotFoundException {
+        List<User> users = new ArrayList<>();
+        Connection connection = getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE sectors_id=?");
+
+        stmt.setInt(1, id);
+        ResultSet resultSet = stmt.executeQuery();
+
+        while (resultSet.next()){
+            User user = new User();
+            user.setId(resultSet.getInt(1));
+            user.setName(resultSet.getString(2));
+            user.setUsername(resultSet.getString(3));
+            user.setPassword(resultSet.getString(4));
+            user.setType(resultSet.getInt(5));
+            user.setSector((Sector) resultSet.getObject(6));
+            users.add(user);
+        }
+        connection.close();
+        return users;
     }
 }
