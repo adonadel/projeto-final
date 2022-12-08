@@ -66,6 +66,4 @@ public class Exercise {
     public void setBudget(Budget budget) {
         this.budget = budget;
     }
-
-
 }
