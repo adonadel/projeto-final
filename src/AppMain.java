@@ -44,33 +44,53 @@ public class AppMain {
                 "Login Sistema", 3);
         String senha = JOptionPane.showInputDialog(null, "Informe a senha do usuário " + login,
                 "Login Sistema", 3);
-        callMenuEntity();
+        callMenuOptions();
     }
 
-    private static void callMenuEntity() throws SQLException, ClassNotFoundException {
+    private static void callMenuOptions() throws SQLException, ClassNotFoundException {
 
-        String[] optionsMenuEntity = {"Sair", "Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos"};
-        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações",
+        String[] optionsMenu = {"Relatórios", "Entidades", "Sair"};
+        int menuOptions = JOptionPane.showOptionDialog(null, "Selecione uma opção :",
+                "Menu Opções (ADMIN)",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenu, optionsMenu[0]);
+        switch (menuOptions) {
+            case 0:
+//                chamar relatórios
+                break;
+            case 1:
+                callMenuEntities();
+                break;
+            case 2:
+                callLogin();
+                break;
+        }
+    }
+
+
+    private static void callMenuEntities() throws SQLException, ClassNotFoundException {
+
+        String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
+        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
                 "Menu entidades (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
-                callLogin();
-                break;
-            case 1:
                 callMenuUsers();
                 break;
-            case 2:
+            case 1:
                 callMenuSectors();
                 break;
-            case 3:
+            case 2:
                 callMenuExercises();
                 break;
-            case 4:
+            case 3:
                 callMenuBudgets();
                 break;
-            case 5:
+            case 4:
                 callMenuTypesBudgets();
+                break;
+            case 5:
+                callMenuOptions();
                 break;
         }
     }
@@ -86,54 +106,83 @@ public class AppMain {
         Sector sector = getSectorDAO().searchById(sectorId);
         // chamando select de nome de setores
 
-        String[] optionsMenuUsers = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
+        String[] optionsMenuUsers = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuUsers = JOptionPane.showOptionDialog(null, "Selecione uma ação para Usuários do setor (" + nameSector + ")",
                 "Menu Usuários (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuUsers, optionsMenuUsers[0]);
 
         switch (menuUsers) {
             case 0:
-                callMenuEntity();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
+                //novo usuário
+                callCreateUser();
                 break;
             case 1:
-                System.out.println(" CHAMAR RELATÓRIO USUÁRIOS");
+                //editar
                 break;
             case 2:
-                System.out.println(" CHAMAR EXCLUIR USUÁRIOS");
+                //excluir
                 break;
             case 3:
-                System.out.println(" CHAMAR EDITAR USUÁRIOS");
-                break;
-            case 4:
-                System.out.println(" CHAMAR NOVO USUÁRIOS");
+                callMenuEntities();
+                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
         }
 
     }
 
+    //    NOVO USUÁRIO
+    private static void callCreateUser(){
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do usuário",
+                "Cadastro Usuário", 3);
+
+        String userName = JOptionPane.showInputDialog(null, "Informe o login que o usuário irá utilizar",
+                "Cadastro Usuário", 3);
+
+        //transformar em list-box puxando os nomes do setores
+        String sectorName = JOptionPane.showInputDialog(null, "Informe o setor que o usuário pertence",
+                "Cadastro Usuário", 3);
+
+        //transformar em list-box puxando os nomes dos tipos de usuários ()
+        String type = JOptionPane.showInputDialog(null, "Informe o tipo do usuário",
+                "Cadastro Usuário", 3);
+
+        String password = JOptionPane.showInputDialog(null, "Informe a senha do usuário",
+                "Cadastro Usuário", 3);
+
+        // Mensagem sucesso
+        JOptionPane.showMessageDialog(null, "Usuário Cadastrado com Sucesso!",
+                "Mensagem do Sistema", 2);
+        //Verificar se o tipod a mensagem está certo ou não
+
+        // Mensagem Erro
+        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste usuário!",
+                "Mensagem do Sistema", 1);
+        //Verificar se o tipod a mensagem está certo ou não
+
+    }
+    //    NOVO USUÁRIO
+
     private static void callMenuSectors() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuSectors = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
+        String[] optionsMenuSectors = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuSectors = JOptionPane.showOptionDialog(null, "Selecione uma ação para Setores",
                 "Menu Setores (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuSectors, optionsMenuSectors[0]);
 
         switch (menuSectors) {
             case 0:
-                callMenuEntity();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
+                //novo
+                callCreateSector();
                 break;
             case 1:
-                System.out.println(" CHAMAR RELATÓRIO SETORES");
+                //editar
                 break;
             case 2:
-                System.out.println(" CHAMAR EXCLUIR SETORES");
+                //excluir
                 break;
             case 3:
-                System.out.println(" CHAMAR EDITAR SETORES");
-                break;
-            case 4:
-                System.out.println(" CHAMAR NOVO SETORES");
+                callMenuEntities();
+                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + menuSectors);
@@ -141,56 +190,91 @@ public class AppMain {
 
     }
 
+    //    NOVO SETOR
+    private static void callCreateSector(){
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor",
+                "Cadastro Setor", 3);
+
+
+        // Mensagem sucesso
+        JOptionPane.showMessageDialog(null, "Setor Cadastrado com Sucesso!",
+                "Mensagem do Sistema", 2);
+        //Verificar se o tipod a mensagem está certo ou não
+
+        // Mensagem Erro
+        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste Setor!",
+                "Mensagem do Sistema", 1);
+        //Verificar se o tipo da mensagem está certo ou não
+
+    }
+    //    NOVO SETOR
+
     private static void callMenuExercises() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuExercises = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
+        String[] optionsMenuExercises = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuExercises = JOptionPane.showOptionDialog(null, "Selecione uma ação para Exercícios",
                 "Menu Exercícios (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuExercises, optionsMenuExercises[0]);
 
         switch (menuExercises) {
             case 0:
-                callMenuEntity();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
+                //novo
+                callCreateExercise();
                 break;
             case 1:
-                System.out.println(" CHAMAR RELATÓRIO EXERCÍCIOS");
+                //editar
                 break;
             case 2:
-                System.out.println(" CHAMAR EXCLUIR EXERCÍCIOS");
+                //excluir
                 break;
             case 3:
-                System.out.println(" CHAMAR EDITAR EXERCÍCIOS");
-                break;
-            case 4:
-                System.out.println(" CHAMAR NOVO EXERCÍCIOS");
+                callMenuEntities();
+                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
         }
 
     }
 
+    //    NOVO SETOR
+    private static void callCreateExercise(){
+
+
+        String year = JOptionPane.showInputDialog(null, "Informe o ano do Exercício",
+                "Cadastro Exercício", 3);
+
+        // Mensagem sucesso
+        JOptionPane.showMessageDialog(null, "Exercício Cadastrado com Sucesso!",
+                "Mensagem do Sistema", 2);
+        //Verificar se o tipod a mensagem está certo ou não
+
+        // Mensagem Erro
+        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste Exercício!",
+                "Mensagem do Sistema", 1);
+        //Verificar se o tipo da mensagem está certo ou não
+
+    }
+    //    NOVO SETOR
+
 
     private static void callMenuTypesBudgets() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuTypesBudgets = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
+        String[] optionsMenuTypesBudgets = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuTypesBudgets = JOptionPane.showOptionDialog(null, "Selecione uma ação para Tipos Orçamentos",
                 "Menu Tipos Orçamentos (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuTypesBudgets, optionsMenuTypesBudgets[0]);
 
         switch (menuTypesBudgets) {
             case 0:
-                callMenuEntity();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
+                //novo
                 break;
             case 1:
-                System.out.println(" CHAMAR RELATÓRIO TIPOS ORÇAMENTOS");
+                //editar
                 break;
             case 2:
-                System.out.println(" CHAMAR EXCLUIR TIPOS ORÇAMENTOS");
+                //excluir
                 break;
             case 3:
-                System.out.println(" CHAMAR EDITAR TIPOS ORÇAMENTOS");
-                break;
-            case 4:
-                System.out.println(" CHAMAR NOVO TIPOS ORÇAMENTOS");
+                callMenuEntities();
+                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
         }
 
@@ -208,27 +292,24 @@ public class AppMain {
 
         // chamando select de nome de setores
 
-        String[] optionsMenuBudgests = {"Voltar", "Relatório", "Excluir", "Editar", "Novo"};
+        String[] optionsMenuBudgests = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuBudgests = JOptionPane.showOptionDialog(null, "Selecione uma ação para Orçamentos do setor (" + nameSector + ")",
                 "Menu Orçamentos (Qualquer usuário)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuBudgests, optionsMenuBudgests[0]);
 
         switch (menuBudgests) {
             case 0:
-                callMenuEntity();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
+                //novo
                 break;
             case 1:
-                System.out.println(" CHAMAR RELATÓRIO ORÇAMENTOS");
+                //editar
                 break;
             case 2:
-                System.out.println(" CHAMAR EXCLUIR ORÇAMENTOS");
+                //excluir
                 break;
             case 3:
-                System.out.println(" CHAMAR EDITAR ORÇAMENTOS");
-                break;
-            case 4:
-                System.out.println(" CHAMAR NOVO ORÇAMENTOS");
+                callMenuEntities();
+                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
         }
 
