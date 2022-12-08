@@ -61,6 +61,44 @@ public class AppMain {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
+                callMenuUsers();
+                callMenuEntities();
+                break;
+            case 1:
+                callMenuSectors();
+                callMenuEntities();
+                break;
+            case 2:
+                callMenuExercises();
+                callMenuEntities();
+                break;
+            case 3:
+                callMenuBudgets();
+                callMenuEntities();
+                break;
+            case 4:
+                callMenuTypesBudgets();
+                callMenuEntities();
+                break;
+            case 5:
+                callMenuOptions();
+                break;
+        }
+    }
+
+    private static void callUsersReports() throws SQLException, ClassNotFoundException {
+        List<User> users = getUserDAO().searchAll();
+        ReportUserForm.emitirRelatorio(users);
+    }
+
+    public static void callMenuReports() {
+
+        String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
+        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
+                "Menu entidades (ADMIN)",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
+        switch (menuEntity) {
+            case 0:
                 callUsersReports();
                 callMenuReports();
                 break;
@@ -84,14 +122,6 @@ public class AppMain {
                 callMenuOptions();
                 break;
         }
-    }
-
-    private static void callUsersReports() throws SQLException, ClassNotFoundException {
-        List<User> users = getUserDAO().searchAll();
-        ReportUserForm.emitirRelatorio(users);
-    }
-
-    public static void callMenuReports() {
     }
 
     private static void callMenuUsers() throws Exception {
