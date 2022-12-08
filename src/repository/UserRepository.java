@@ -71,7 +71,8 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            user.setSector((Sector) resultSet.getObject(6));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setSector(sector);
             users.add(user);
         }
         connection.close();
@@ -93,7 +94,8 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            user.setSector((Sector) resultSet.getObject(6));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setSector(sector);
             users.add(user);
         }
         connection.close();
