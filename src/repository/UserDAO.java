@@ -52,4 +52,54 @@ public final class UserDAO{
         }
         return filtredUsers;
     }
+
+    public User searchById(Integer id) {
+        UserRepository userRepository = new UserRepository();
+        User user = new User();
+        try{
+            users = userRepository.searchById(id);
+
+            for (User auxUser : users){
+                if (auxUser.getId().equals(id)) {
+                    user = auxUser;
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
+        UserRepository userRepository = new UserRepository();
+        ArrayList<String> names = new ArrayList<>();
+        try{
+            users = userRepository.search();
+
+            for (User user : users) {
+                names.add(user.getName());
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return names.toArray();
+    }
+
+    public Object[] searchAllWithIdOnName() {
+        UserRepository userRepository = new UserRepository();
+        List<String> usersName = new ArrayList<>();
+
+        try{
+            users = userRepository.search();
+
+            for (User user : users) {
+                usersName.add(user.getId() + " - " + user.getName());
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return usersName.toArray();
+    }
 }

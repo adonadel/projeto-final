@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
-public class Budget_type {
+public class BudgetType {
     private Integer id;
     private String name;
     private Integer active;
