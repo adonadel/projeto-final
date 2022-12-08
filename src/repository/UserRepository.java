@@ -4,6 +4,7 @@ import model.Sector;
 import model.User;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +159,9 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setCreated(LocalDateTime.from(resultSet.getDate(6).toLocalDate()));
+            user.setModified(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(8));
             user.setSector(sector);
             users.add(user);
         }
@@ -182,7 +185,9 @@ public class UserRepository {
                 user.setUsername(resultSet.getString(3));
                 user.setPassword(resultSet.getString(4));
                 user.setType(resultSet.getInt(5));
-                Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+                user.setCreated(LocalDateTime.from(resultSet.getDate(6).toLocalDate()));
+                user.setModified(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
+                Sector sector = getSectorDAO().searchById(resultSet.getInt(8));
                 user.setSector(sector);
             }
             connection.close();
