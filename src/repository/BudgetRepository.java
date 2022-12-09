@@ -2,6 +2,8 @@ package repository;
 
 
 import model.Budget;
+import model.BudgetType;
+import model.Sector;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -55,10 +57,15 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
-            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
-            budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudgetType().setId(resultSet.getInt(11));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(8), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(9), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(10));
+            budget.setSector(sector);
+            BudgetType budgetType = getBudgetTypeDAO().searchById(resultSet.getInt(11));
+            budget.setBudgetType(budgetType);
             budgets.add(budget);
         }
         connection.close();
@@ -82,10 +89,15 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
-            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
-            budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudgetType().setId(resultSet.getInt(11));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(8), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(9), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(10));
+            budget.setSector(sector);
+            BudgetType budgetType = getBudgetTypeDAO().searchById(resultSet.getInt(11));
+            budget.setBudgetType(budgetType);
             budgets.add(budget);
         }
         connection.close();
@@ -109,10 +121,15 @@ public class BudgetRepository {
             budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
-            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
-            budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudgetType().setId(resultSet.getInt(11));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(8), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(9), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(10));
+            budget.setSector(sector);
+            BudgetType budgetType = getBudgetTypeDAO().searchById(resultSet.getInt(11));
+            budget.setBudgetType(budgetType);
             budgets.add(budget);
         }
         connection.close();
@@ -133,9 +150,15 @@ public class BudgetRepository {
     public void update (Budget budget) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
 
-        PreparedStatement stmt = connection.prepareStatement("update budgets SET password = ? WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("update budgets SET name = ?, item = ?, qnt = ?, unt_val = ?, status= ?, active = ?, modified = ? WHERE id = ?");
         stmt.setString(1, budget.getName());
-        stmt.setInt(2, budget.getId());
+        stmt.setString(2, budget.getItem());
+        stmt.setInt(3, budget.getQnt());
+        stmt.setDouble(4, budget.getUntVal());
+        stmt.setInt(5, budget.getStatus());
+        stmt.setInt(6, budget.getActive());
+        stmt.setString(7, budget.getModified().toString());
+        stmt.setInt(8, budget.getId());
 
         int i = stmt.executeUpdate();
         System.out.println(i + " linhas atualizadas");
@@ -147,6 +170,19 @@ public class BudgetRepository {
         PreparedStatement stmt = connection.prepareStatement("DELETE FROM budgets WHERE id = ?");
         stmt.setInt(1, budget.getId());
         stmt.executeUpdate();
+
+        int i = stmt.executeUpdate();
+        System.out.println("1 linha removida");
         connection.close();
+    }
+
+    public static SectorDAO getSectorDAO() {
+        SectorDAO sectorDAO = new SectorDAO();
+        return sectorDAO;
+    }
+
+    public static BudgetTypeDAO getBudgetTypeDAO() {
+        BudgetTypeDAO budgetTypeDAO = new BudgetTypeDAO();
+        return budgetTypeDAO;
     }
 }

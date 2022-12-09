@@ -1,7 +1,9 @@
 package relatorio;
 
+import model.Active;
 import model.Budget;
 import model.Exercise;
+import model.ExerciseStatus;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
@@ -48,15 +50,15 @@ public class TableExercise extends AbstractTableModel{
                 case INDEX_YEAR:
                     return registroExercise.getYear();
                 case INDEX_STATUS:
-                    return registroExercise.getStatus();
+                    return ExerciseStatus.getEnumByValue(registroExercise.getStatus());
                 case INDEX_ACTIVE:
-                    return registroExercise.getActive();
+                    return Active.getEnumByValue(registroExercise.getActive());
                 case INDEX_CREATED:
                     return registroExercise.getCreated();
                 case INDEX_MODIFIED:
                     return registroExercise.getModified();
                 case INDEX_BUDGET:
-                    return registroExercise.getBudget();
+                    return registroExercise.getBudget().getName();
                 default:
                     return new Object();
             }

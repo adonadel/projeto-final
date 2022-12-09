@@ -136,15 +136,15 @@ public class UserRepository {
     public void update (User user) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
 
-        PreparedStatement stmt = connection.prepareStatement("update users SET name = ?,password = ?, type = ?, modified = ?, sectors_id = ? WHERE id = ?");
-        ResultSet resultSet = stmt.executeQuery();
+        PreparedStatement stmt = connection.prepareStatement("update users SET name = ?,password = ?, type = ?, active = ?, modified = ?, sectors_id = ? WHERE id = ?");
 
         stmt.setString(1, user.getName());
         stmt.setString(2, user.getPassword());
         stmt.setInt(3, user.getType());
-        stmt.setString(4, user.getModified().toString());
-        stmt.setInt(5, user.getSector().getId());
-        stmt.setInt(6, user.getId());
+        stmt.setInt(4, user.getActive());
+        stmt.setString(5, DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(user.getModified()));
+        stmt.setInt(6, user.getSector().getId());
+        stmt.setInt(7, user.getId());
 
         int i = stmt.executeUpdate();
         System.out.println(i + " linhas atualizadas");
@@ -158,7 +158,7 @@ public class UserRepository {
         stmt.executeUpdate();
 
         int i = stmt.executeUpdate();
-        System.out.println(i + " linhas removidas");
+        System.out.println("1 linha removida");
         connection.close();
     }
 
@@ -223,5 +223,10 @@ public class UserRepository {
     public static SectorDAO getSectorDAO() {
         SectorDAO sectorDAO = new SectorDAO();
         return sectorDAO;
+    }
+
+    public static BudgetTypeDAO getBudgetTypeDAO() {
+        BudgetTypeDAO budgetTypeDAO = new BudgetTypeDAO();
+        return budgetTypeDAO;
     }
 }

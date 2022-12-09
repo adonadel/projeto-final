@@ -14,7 +14,7 @@ public class ReportBudgetTypeForm extends JPanel{
         private static final long serialVersionUID = 1L;
 
         public static final String[] nomeColunas =
-                {"ID", "Nome", "Nome", "Ativo", "Criação", "Modificação", ""};
+                {"ID", "Nome", "Ativo", "Criação", "Modificação", ""};
 
         protected JTable table;
         protected JScrollPane scroller;

@@ -3,7 +3,6 @@ package repository;
 import model.BudgetType;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,26 +33,26 @@ public class BudgetTypeRepository {
     }
 
     public List<BudgetType> search() throws SQLException, ClassNotFoundException {
-        List<BudgetType> budgets = new ArrayList<>();
+        List<BudgetType> budgetsType = new ArrayList<>();
         Connection connection = getConnection();
 
         PreparedStatement stmt = connection.prepareStatement("select * from budgets_type");
         ResultSet resultSet = stmt.executeQuery();
 
         while (resultSet.next()){
-            BudgetType budget = new BudgetType();
-            budget.setId(resultSet.getInt(1));
-            budget.setName(resultSet.getString(2));
-            budget.setActive(resultSet.getInt(3));
+            BudgetType budgetType = new BudgetType();
+            budgetType.setId(resultSet.getInt(1));
+            budgetType.setName(resultSet.getString(2));
+            budgetType.setActive(resultSet.getInt(3));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
             LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
-            budget.setCreated(LocalDateTime.from(created));
-            budget.setModified(LocalDateTime.from(modified));
-            budgets.add(budget);
+            budgetType.setCreated(LocalDateTime.from(created));
+            budgetType.setModified(LocalDateTime.from(modified));
+            budgetsType.add(budgetType);
         }
         connection.close();
-        return budgets;
+        return budgetsType;
     }
 
     public List<BudgetType> searchByName (String name) throws SQLException, ClassNotFoundException {
@@ -118,7 +117,7 @@ public class BudgetTypeRepository {
     public void update (BudgetType budget) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
 
-        PreparedStatement stmt = connection.prepareStatement("update budgets_type SET name = ?, password = ?, modified = ? WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("update budgets_type SET name = ?, active = ?, modified = ? WHERE id = ?");
         stmt.setString(1, budget.getName());
         stmt.setInt(2, budget.getActive());
         stmt.setString(3, budget.getModified().toString());
@@ -130,11 +129,14 @@ public class BudgetTypeRepository {
         connection.close();
     }
 
-    public void delete (BudgetType budget) throws SQLException, ClassNotFoundException {
+    public void delete (BudgetType budgetType) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM budgets WHERE id = ?");
-        stmt.setInt(1, budget.getId());
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM budgets_type WHERE id = ?");
+        stmt.setInt(1, budgetType.getId());
         stmt.executeUpdate();
+
+        int i = stmt.executeUpdate();
+        System.out.println("1 linhas removidas");
         connection.close();
     }
 }

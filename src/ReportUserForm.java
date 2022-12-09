@@ -14,7 +14,7 @@ public class ReportUserForm extends JPanel{
         private static final long serialVersionUID = 1L;
 
         public static final String[] nomeColunas =
-                {"ID", "Nome", "Nome de Usuário", "Senha" , "Tipo de Usuário" , "Criação", "Modificação", "Setor" , ""};
+                {"ID", "Nome", "Nome de Usuário", "Senha" , "Tipo de Usuário", "Ativo" , "Criação", "Modificação", "Setor" , ""};
         protected JTable table;
         protected JScrollPane scroller;
         protected TableUser tabela;

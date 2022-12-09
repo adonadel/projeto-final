@@ -1,5 +1,7 @@
 package repository;
 
+import model.Budget;
+import model.BudgetType;
 import model.Exercise;
 
 import java.sql.*;
@@ -28,7 +30,6 @@ public class ExerciseRepository {
         stmt.setString(6, DateTimeFormatter.ISO_LOCAL_DATE.format(exercise.getModified()));
         stmt.setInt(7, exercise.getBudget().getId());
 
-
         int i = stmt.executeUpdate();
         System.out.println(i + " linhas inseridas");
         connection.close();
@@ -45,12 +46,15 @@ public class ExerciseRepository {
             Exercise exercise = new Exercise();
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
-            exercise.setActive(resultSet.getInt(3));
+            exercise.setStatus(resultSet.getInt(3));
+            exercise.setActive(resultSet.getInt(4));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
-            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(5), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(6), formatter);
             exercise.setCreated(LocalDateTime.from(created));
             exercise.setModified(LocalDateTime.from(modified));
+            Budget budget = getBudgetDAO().searchById(resultSet.getInt(7));
+            exercise.setBudget(budget);
             exercises.add(exercise);
         }
         connection.close();
@@ -69,12 +73,15 @@ public class ExerciseRepository {
             Exercise exercise = new Exercise();
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
-            exercise.setActive(resultSet.getInt(3));
+            exercise.setStatus(resultSet.getInt(3));
+            exercise.setActive(resultSet.getInt(4));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
-            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(5), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(6), formatter);
             exercise.setCreated(LocalDateTime.from(created));
             exercise.setModified(LocalDateTime.from(modified));
+            Budget budget = getBudgetDAO().searchById(resultSet.getInt(7));
+            exercise.setBudget(budget);
             exercises.add(exercise);
         }
         connection.close();
@@ -132,7 +139,14 @@ public class ExerciseRepository {
         Connection connection = getConnection();
         PreparedStatement stmt = connection.prepareStatement("DELETE FROM exercises WHERE id = ?");
         stmt.setInt(1, exercise.getId());
-        stmt.executeUpdate();
+
+        int i = stmt.executeUpdate();
+        System.out.println("1 linha removida");
         connection.close();
+    }
+
+    public static BudgetDAO getBudgetDAO() {
+        BudgetDAO budgetDAO = new BudgetDAO();
+        return budgetDAO;
     }
 }

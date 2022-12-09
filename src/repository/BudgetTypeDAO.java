@@ -28,8 +28,8 @@ public class BudgetTypeDAO {
     }
 
     public void remove(BudgetType budgetType) throws Exception {
-        BudgetTypeRepository budgetTypeTypeRepository = new BudgetTypeRepository();
-        budgetTypeTypeRepository.delete(budgetType);
+        BudgetTypeRepository budgetTypeRepository = new BudgetTypeRepository();
+        budgetTypeRepository.delete(budgetType);
     }
 
     public List<BudgetType> searchAll() throws SQLException, ClassNotFoundException {

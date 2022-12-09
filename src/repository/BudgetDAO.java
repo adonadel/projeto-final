@@ -1,7 +1,9 @@
 package repository;
 
 import model.Budget;
+import model.Exercise;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,14 @@ public class BudgetDAO {
     }
 
     public void remove(Budget budget) throws Exception {
+        ExerciseRepository exerciseRepository = new ExerciseRepository();
         BudgetRepository budgetRepository = new BudgetRepository();
-        budgetRepository.delete(budget);
+        List<Exercise> exercises = exerciseRepository.searchById(budget.getId());
+        if(exercises.size() == 0) {
+            budgetRepository.delete(budget);
+        }else {
+            JOptionPane.showMessageDialog(null, "Orçamento em uso! Impossível excluir.", "Exclusão do Orçamento", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public List<Budget> searchAll() throws SQLException, ClassNotFoundException {
@@ -83,7 +91,7 @@ public class BudgetDAO {
 
             for (Budget budget : budgets){
                 if (budget.getName().equals(name)) {
-                    budgets.add(budget);
+                    auxBudget.add(budget);
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {

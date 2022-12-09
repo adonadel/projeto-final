@@ -1,6 +1,8 @@
 package relatorio;
 
+import model.Active;
 import model.User;
+import model.UserType;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
@@ -12,10 +14,11 @@ public class TableUser extends AbstractTableModel {
         public static final int INDEX_USERNAME = 2;
         public static final int INDEX_PASSWORD = 3;
         public static final int INDEX_TYPE     = 4;
-        public static final int INDEX_CREATED  = 5;
-        public static final int INDEX_MODIFIED = 6;
-        public static final int INDEX_SECTOR   = 7;
-        public static final int INDEX_ESCONDIDO = 8;
+        public static final int INDEX_ACTIVE     = 5;
+        public static final int INDEX_CREATED  = 6;
+        public static final int INDEX_MODIFIED = 7;
+        public static final int INDEX_SECTOR   = 8;
+        public static final int INDEX_ESCONDIDO = 9;
 
         protected String[] nomeColunas;
         protected Vector<User> vetorDados;
@@ -52,7 +55,9 @@ public class TableUser extends AbstractTableModel {
                 case INDEX_PASSWORD:
                     return registroUser.getPassword();
                 case INDEX_TYPE:
-                    return registroUser.getType();
+                    return UserType.getEnumByValue(registroUser.getType());
+                case INDEX_ACTIVE:
+                    return Active.getEnumByValue(registroUser.getActive());
                 case INDEX_CREATED:
                     return registroUser.getCreated();
                 case INDEX_MODIFIED:

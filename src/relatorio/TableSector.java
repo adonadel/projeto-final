@@ -1,5 +1,6 @@
 package relatorio;
 
+import model.Active;
 import model.Sector;
 
 import javax.swing.table.AbstractTableModel;
@@ -45,7 +46,7 @@ public class TableSector extends AbstractTableModel{
                 case INDEX_NAME:
                     return registroSector.getName();
                 case INDEX_ACTIVE:
-                    return registroSector.getActive();
+                    return Active.getEnumByValue(registroSector.getActive());
                 case INDEX_CREATED:
                     return registroSector.getCreated();
                 case INDEX_MODIFIED:

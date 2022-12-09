@@ -135,7 +135,7 @@ public class SectorRepository {
         stmt.executeUpdate();
 
         int i = stmt.executeUpdate();
-        System.out.println(i + " linhas removidas");
+        System.out.println("1 linhas removidas");
         connection.close();
     }
 }
