@@ -89,8 +89,8 @@ public class AppMain {
     public static void callMenuReports() throws Exception {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
-        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
-                "Menu entidades ",
+        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para gerar o relatório: ",
+                "Menu relatórios ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
