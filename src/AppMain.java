@@ -86,11 +86,6 @@ public class AppMain {
         }
     }
 
-    private static void callUsersReports() throws SQLException, ClassNotFoundException {
-        List<User> users = getUserDAO().searchAll();
-        ReportUserForm.emitirRelatorio(users);
-    }
-
     public static void callMenuReports() throws Exception {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
@@ -122,6 +117,31 @@ public class AppMain {
                 callMenuOptions();
                 break;
         }
+    }
+
+    private static void callUsersReports() throws SQLException, ClassNotFoundException {
+        List<User> users = getUserDAO().searchAll();
+        ReportUserForm.emitirRelatorio(users);
+    }
+
+    private static void callSectorReports() throws SQLException, ClassNotFoundException {
+        List<Sector> sectors = getSectorDAO().searchAll();
+        ReportSectorForm.emitirRelatorio(sectors);
+    }
+
+    private static void callExercisesReports() throws SQLException, ClassNotFoundException {
+        List<Exercise> exercises = getExerciseDAO().searchAll();
+        ReportExerciseForm.emitirRelatorio(exercises);
+    }
+
+    private static void callBudgetsReports() throws SQLException, ClassNotFoundException {
+        List<Budget> budgets = getBudgetDAO().searchAll();
+        ReportBudgetForm.emitirRelatorio(budgets);
+    }
+
+    private static void callTypesBudgetsReports() throws SQLException, ClassNotFoundException {
+        List<BudgetType> budgetTypes = getBudgetTypeDAO().searchAll();
+        ReportBudgetTypeForm.emitirRelatorio(budgetTypes);
     }
 
     private static void callMenuUsers() throws Exception {
