@@ -1,7 +1,6 @@
-import model.Sector;
-import model.User;
-import repository.SectorDAO;
-import repository.UserDAO;
+import jdk.nashorn.internal.scripts.JO;
+import model.*;
+import repository.*;
 
 import javax.swing.*;
 
@@ -9,56 +8,44 @@ import static java.lang.Integer.parseInt;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AppMain {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws Exception {
         callLogin();
     }
 
-    public static void mainTest(String[] args) throws SQLException, ClassNotFoundException {
-
-        Connection connection = getConnection();
-
-        Sector sector = new Sector();
-
-        PreparedStatement stmt = connection.prepareStatement("insert into sectors values(?, ?, ?, ?, ?)");
-        stmt.setNull(1, 1);
-        stmt.setString(2, "João");
-        stmt.setInt(3, 1);
-        stmt.setString(4, "2022-10-10");
-        stmt.setString(5, "2022-10-10");
-
-        int i = stmt.executeUpdate();
-        System.out.println(i + " linhas inseridas");
-        connection.close();
-
-        User user = chamaCadastroPessoa();
-        cadastroUser();
-        getUserDAO().save(user);
-
-        callLogin();
+    private static void callLogin() throws Exception {
+        String username = JOptionPane.showInputDialog(null, "Informe o login do usuário ",
+                "Login Sistema", 3);
+        String password = JOptionPane.showInputDialog(null, "Informe a senha do usuário " + username,
+                "Login Sistema", 3);
+        if (username != null && password != null)
+            checkUser(username, password);
     }
 
-    private static void callLogin() throws SQLException, ClassNotFoundException {
-        String login = JOptionPane.showInputDialog(null, "Informe o login do usuário ",
-                "Login Sistema", 3);
-        String senha = JOptionPane.showInputDialog(null, "Informe a senha do usuário " + login,
-                "Login Sistema", 3);
-        callMenuOptions();
+    private static void checkUser(String username, String password) throws Exception {
+        User user = getUserDAO().checkUserAuth(username, password);
+        if (user.getId() != null) {
+            callMenuOptions();
+        }else{
+            JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos!", "Login Sistema", JOptionPane.INFORMATION_MESSAGE);
+            callLogin();
+        }
     }
 
-    private static void callMenuOptions() throws SQLException, ClassNotFoundException {
+    private static void callMenuOptions() throws Exception {
 
-        String[] optionsMenu = {"Relatórios", "Entidades", "Sair"};
+        String[] optionsMenu = {"Entidades", "Relatórios", "Sair"};
         int menuOptions = JOptionPane.showOptionDialog(null, "Selecione uma opção :",
                 "Menu Opções (ADMIN)",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenu, optionsMenu[0]);
         switch (menuOptions) {
             case 0:
-//                chamar relatórios
+                callMenuEntities();
                 break;
             case 1:
-                callMenuEntities();
+                callMenuReports();
                 break;
             case 2:
                 callLogin();
@@ -66,8 +53,7 @@ public class AppMain {
         }
     }
 
-
-    private static void callMenuEntities() throws SQLException, ClassNotFoundException {
+    private static void callMenuEntities() throws Exception {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
         int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
@@ -76,18 +62,23 @@ public class AppMain {
         switch (menuEntity) {
             case 0:
                 callMenuUsers();
+                callMenuEntities();
                 break;
             case 1:
                 callMenuSectors();
+                callMenuEntities();
                 break;
             case 2:
                 callMenuExercises();
+                callMenuEntities();
                 break;
             case 3:
                 callMenuBudgets();
+                callMenuEntities();
                 break;
             case 4:
                 callMenuTypesBudgets();
+                callMenuEntities();
                 break;
             case 5:
                 callMenuOptions();
@@ -95,332 +86,485 @@ public class AppMain {
         }
     }
 
-    private static void callMenuUsers() throws SQLException, ClassNotFoundException {
+    public static void callMenuReports() throws Exception {
 
-        // chamando select de nome de setores
-        Object[] namesSectors = getSectorDAO().searchAllWithIdOnName();
-        Object nameSector = JOptionPane.showInputDialog(null, "Selecione o setor: ",
-                "Menu Usuários", JOptionPane.QUESTION_MESSAGE, null, namesSectors, namesSectors[0]);
-        String[] split = nameSector.toString().split(" - ");
-        int sectorId = parseInt(split[0]);
-        Sector sector = getSectorDAO().searchById(sectorId);
-        // chamando select de nome de setores
+        String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
+        int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
+                "Menu entidades (ADMIN)",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
+        switch (menuEntity) {
+            case 0:
+                callUsersReports();
+                callMenuReports();
+                break;
+            case 1:
+                callSectorReports();
+                callMenuReports();
+                break;
+            case 2:
+                callExercisesReports();
+                callMenuReports();
+                break;
+            case 3:
+                callBudgetsReports();
+                callMenuReports();
+                break;
+            case 4:
+                callTypesBudgetsReports();
+                callMenuReports();
+                break;
+            case 5:
+                callMenuOptions();
+                break;
+        }
+    }
 
+    private static void callUsersReports() throws SQLException, ClassNotFoundException {
+        List<User> users = getUserDAO().searchAll();
+        ReportUserForm.emitirRelatorio(users);
+    }
+
+    private static void callSectorReports() throws SQLException, ClassNotFoundException {
+        List<Sector> sectors = getSectorDAO().searchAll();
+        ReportSectorForm.emitirRelatorio(sectors);
+    }
+
+    private static void callExercisesReports() throws SQLException, ClassNotFoundException {
+        List<Exercise> exercises = getExerciseDAO().searchAll();
+        ReportExerciseForm.emitirRelatorio(exercises);
+    }
+
+    private static void callBudgetsReports() throws SQLException, ClassNotFoundException {
+        List<Budget> budgets = getBudgetDAO().searchAll();
+        ReportBudgetForm.emitirRelatorio(budgets);
+    }
+
+    private static void callTypesBudgetsReports() throws SQLException, ClassNotFoundException {
+        List<BudgetType> budgetTypes = getBudgetTypeDAO().searchAll();
+        ReportBudgetTypeForm.emitirRelatorio(budgetTypes);
+    }
+
+    private static void callMenuUsers() throws Exception {
         String[] optionsMenuUsers = {"Novo", "Editar", "Excluir", "Voltar"};
-        int menuUsers = JOptionPane.showOptionDialog(null, "Selecione uma ação para Usuários do setor (" + nameSector + ")",
-                "Menu Usuários (ADMIN)",
+        int menuUsers = JOptionPane.showOptionDialog(null, "Selecione uma ação: ",
+                "Menu Usuários",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuUsers, optionsMenuUsers[0]);
-
+        User user = null;
         switch (menuUsers) {
             case 0:
                 //novo usuário
-                callCreateUser();
+                user = callCreateUser();
+                if (user != null)
+                    getUserDAO().save(user);
                 break;
             case 1:
-                //editar
+                user = selectUser();
+                user = callUpdateSector(user);
+
+                if (user != null)
+                    getUserDAO().save(user);
+
+                callMenuUsers();
                 break;
             case 2:
-                //excluir
+                user = selectUser();
+                getUserDAO().remove(user);
+
+                callMenuSectors();
                 break;
             case 3:
                 callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
                 break;
         }
-
     }
 
-    //    NOVO USUÁRIO
-    private static void callCreateUser(){
-
+    private static User callCreateUser() throws SQLException, ClassNotFoundException{
+        User user = new User();
         String name = JOptionPane.showInputDialog(null, "Informe o nome do usuário",
                 "Cadastro Usuário", 3);
 
         String userName = JOptionPane.showInputDialog(null, "Informe o login que o usuário irá utilizar",
                 "Cadastro Usuário", 3);
 
-        //transformar em list-box puxando os nomes do setores
-        String sectorName = JOptionPane.showInputDialog(null, "Informe o setor que o usuário pertence",
-                "Cadastro Usuário", 3);
-
-        //transformar em list-box puxando os nomes dos tipos de usuários ()
-        String type = JOptionPane.showInputDialog(null, "Informe o tipo do usuário",
-                "Cadastro Usuário", 3);
-
         String password = JOptionPane.showInputDialog(null, "Informe a senha do usuário",
                 "Cadastro Usuário", 3);
 
-        // Mensagem sucesso
-        JOptionPane.showMessageDialog(null, "Usuário Cadastrado com Sucesso!",
-                "Mensagem do Sistema", 2);
-        //Verificar se o tipod a mensagem está certo ou não
+        Object[] arrayType = UserType.getEnumArray();
+        Object auxType = JOptionPane.showInputDialog(null, "Informe o tipo do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arrayType, arrayType[1]);
+        Integer type = UserType.getEnumIntValue(auxType);
 
-        // Mensagem Erro
-        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste usuário!",
-                "Mensagem do Sistema", 1);
-        //Verificar se o tipod a mensagem está certo ou não
+        Object[] arraySectors = getSectorDAO().searchAllReturnArray();
+        Object auxSector = JOptionPane.showInputDialog(null, "Informe o setor do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arraySectors, arraySectors[0]);
+        List<Sector> sectors = getSectorDAO().searchByName((String) auxSector);
+        Sector sector = sectors.get(0);
 
-    }
-    //    NOVO USUÁRIO
-
-    private static void callMenuSectors() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuSectors = {"Novo", "Editar", "Excluir", "Voltar"};
-        int menuSectors = JOptionPane.showOptionDialog(null, "Selecione uma ação para Setores",
-                "Menu Setores (ADMIN)",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuSectors, optionsMenuSectors[0]);
-
-        switch (menuSectors) {
-            case 0:
-                //novo
-                callCreateSector();
-                break;
-            case 1:
-                //editar
-                break;
-            case 2:
-                //excluir
-                break;
-            case 3:
-                callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + menuSectors);
-        }
-
-    }
-
-    //    NOVO SETOR
-    private static void callCreateSector(){
-
-        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor",
-                "Cadastro Setor", 3);
-
-
-        // Mensagem sucesso
-        JOptionPane.showMessageDialog(null, "Setor Cadastrado com Sucesso!",
-                "Mensagem do Sistema", 2);
-        //Verificar se o tipod a mensagem está certo ou não
-
-        // Mensagem Erro
-        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste Setor!",
-                "Mensagem do Sistema", 1);
-        //Verificar se o tipo da mensagem está certo ou não
-
-    }
-    //    NOVO SETOR
-
-    private static void callMenuExercises() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuExercises = {"Novo", "Editar", "Excluir", "Voltar"};
-        int menuExercises = JOptionPane.showOptionDialog(null, "Selecione uma ação para Exercícios",
-                "Menu Exercícios (ADMIN)",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuExercises, optionsMenuExercises[0]);
-
-        switch (menuExercises) {
-            case 0:
-                //novo
-                callCreateExercise();
-                break;
-            case 1:
-                //editar
-                break;
-            case 2:
-                //excluir
-                break;
-            case 3:
-                callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
-                break;
-        }
-
-    }
-
-    //    NOVO SETOR
-    private static void callCreateExercise(){
-
-
-        String year = JOptionPane.showInputDialog(null, "Informe o ano do Exercício",
-                "Cadastro Exercício", 3);
-
-        // Mensagem sucesso
-        JOptionPane.showMessageDialog(null, "Exercício Cadastrado com Sucesso!",
-                "Mensagem do Sistema", 2);
-        //Verificar se o tipod a mensagem está certo ou não
-
-        // Mensagem Erro
-        JOptionPane.showMessageDialog(null, "Ocorreu algum erro no cadastro deste Exercício!",
-                "Mensagem do Sistema", 1);
-        //Verificar se o tipo da mensagem está certo ou não
-
-    }
-    //    NOVO SETOR
-
-
-    private static void callMenuTypesBudgets() throws SQLException, ClassNotFoundException {
-        String[] optionsMenuTypesBudgets = {"Novo", "Editar", "Excluir", "Voltar"};
-        int menuTypesBudgets = JOptionPane.showOptionDialog(null, "Selecione uma ação para Tipos Orçamentos",
-                "Menu Tipos Orçamentos (ADMIN)",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuTypesBudgets, optionsMenuTypesBudgets[0]);
-
-        switch (menuTypesBudgets) {
-            case 0:
-                //novo
-                break;
-            case 1:
-                //editar
-                break;
-            case 2:
-                //excluir
-                break;
-            case 3:
-                callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
-                break;
-        }
-
-    }
-
-    private static void callMenuBudgets() throws SQLException, ClassNotFoundException {
-
-        // chamando select de nome de setores
-        Object[] namesSectors = getSectorDAO().searchAllOnlyWithName();
-        Object nameSector = JOptionPane.showInputDialog(null, "Selecione o setor: ",
-                "Menu Orçamentos", JOptionPane.QUESTION_MESSAGE, null, namesSectors, namesSectors[0]);
-        String[] split = nameSector.toString().split(" - ");
-        int sectorId = parseInt(split[0]);
-        Sector sector = getSectorDAO().searchById(sectorId);
-
-        // chamando select de nome de setores
-
-        String[] optionsMenuBudgests = {"Novo", "Editar", "Excluir", "Voltar"};
-        int menuBudgests = JOptionPane.showOptionDialog(null, "Selecione uma ação para Orçamentos do setor (" + nameSector + ")",
-                "Menu Orçamentos (Qualquer usuário)",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuBudgests, optionsMenuBudgests[0]);
-
-        switch (menuBudgests) {
-            case 0:
-                //novo
-                break;
-            case 1:
-                //editar
-                break;
-            case 2:
-                //excluir
-                break;
-            case 3:
-                callMenuEntities();
-                //RETORNA/ABRE PARA MENUS DE ENTIDADES
-                break;
-        }
-
-    }
-    private static User chamaCadastroPessoa() throws SQLException, ClassNotFoundException {
-        User user;
-        user = cadastroUser();
-        return user;
-        //da pra simplicar por return cadastroUser(); eu acho, ou ir direto pro outro se for só isso aqui
-    }
-
-    private static User cadastroUser() {
-        String name = "Lucas";
-        String username = "lucas";
-        String password = "123";
-        String type = "1";
-        String created = String.valueOf(LocalDateTime.now());
-        String modified = String.valueOf(LocalDateTime.now());
-        Sector sector = new Sector();
-        //---------------------
-
-        Connection connection = null;
-        try {
-            connection = getConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        PreparedStatement stmt = null;
-        try {
-            stmt = connection.prepareStatement("select * from sectors WHERE id = 1;");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        ResultSet resultSet = null;
-        try {
-            resultSet = stmt.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        while (true){
-            try {
-                if (!resultSet.next()) break;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                sector.setId(resultSet.getInt(1));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                sector.setName(resultSet.getString(2));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                sector.setActive(resultSet.getInt(3));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                String[] createdd;
-                createdd = resultSet.getString(4).split("-", 0);
-                String[] aux;
-                aux = createdd[2].split(" ", 0);
-                String[] times;
-                times = aux[1].split(":", 0);
-                sector.setCreated(LocalDateTime.of(Integer.parseInt(createdd[0]), Integer.parseInt(createdd[1]), Integer.parseInt(aux[0]), Integer.parseInt(times[0]), Integer.parseInt(times[1]), Integer.parseInt(times[2])));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                String[] modifedd;
-                modifedd = resultSet.getString(5).split("-", 0);
-                String[] auxModified;
-                auxModified = modifedd[2].split(" ", 0);
-                String[] timesModified;
-                timesModified = auxModified[1].split(":", 0);
-                sector.setCreated(LocalDateTime.of(Integer.parseInt(modifedd[0]), Integer.parseInt(modifedd[1]), Integer.parseInt(auxModified[0]), Integer.parseInt(timesModified[0]), Integer.parseInt(timesModified[1]), Integer.parseInt(timesModified[2])));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        User user = new User();
         user.setName(name);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setType(Integer.valueOf(type));
+        user.setUsername(userName);
         user.setSector(sector);
+        user.setType(type);
+        user.setPassword(password);
         user.setCreated(LocalDateTime.now());
         user.setModified(LocalDateTime.now());
 
         return user;
+    }
+
+    private static User callUpdateSector(User user) throws SQLException, ClassNotFoundException{
+        String name = JOptionPane.showInputDialog(null, "Informe o novo nome do usuário", user.getName());
+        String password = JOptionPane.showInputDialog(null, "Informe a nova senha", user.getPassword());
+
+        Object[] arrayType = UserType.getEnumArray();
+        Object auxType = JOptionPane.showInputDialog(null, "Informe o novo tipo do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arrayType, arrayType[1]);
+        Integer type = UserType.getEnumIntValue(auxType);
+
+        Object[] arraySectors = getSectorDAO().searchAllReturnArray();
+        Object auxSector = JOptionPane.showInputDialog(null, "Informe o setor do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arraySectors, arraySectors[0]);
+        List<Sector> sectors = getSectorDAO().searchByName((String) auxSector);
+        Sector sector = sectors.get(0);
+
+        user.setName(name);
+        user.setPassword(password);
+        user.setType(type);
+        user.setSector(sector);
+        user.setModified(LocalDateTime.now());
+
+        return user;
+    }
+
+    private static User selectUser() throws SQLException, ClassNotFoundException {
+        Object[] selectionValues = getUserDAO().searchAllReturnArray();
+        String initialSelection = (String) selectionValues[0];
+        Object selection = JOptionPane.showInputDialog(null, "Selecione um usuário",
+                null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+        List<User> users = getUserDAO().searchByName((String) selection);
+        return users.get(0);
+    }
+
+    private static void callMenuSectors() throws Exception {
+        String[] optionsMenuSectors = {"Novo", "Editar", "Excluir", "Voltar"};
+        int menuSectors = JOptionPane.showOptionDialog(null, "Selecione uma ação para Setores",
+                "Menu Setores (ADMIN)",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuSectors, optionsMenuSectors[0]);
+        Sector sector = null;
+        switch (menuSectors) {
+            case 0: //novo
+                sector = callCreateSector();
+
+                if (sector != null)
+                    getSectorDAO().save(sector);
+
+                callMenuSectors();
+                break;
+            case 1: //editar
+                sector = selectSector();
+                sector = callUpdateSector(sector);
+
+                if (sector != null)
+                    getSectorDAO().save(sector);
+
+                callMenuSectors();
+                break;
+            case 2: //excluir
+                sector = selectSector();
+                getSectorDAO().remove(sector);
+
+                callMenuSectors();
+                break;
+            case 3: //voltar
+                callMenuEntities();
+                break;
+        }
+    }
+
+    private static Sector callCreateSector(){
+        Sector sector = new Sector();
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor",
+                "Cadastro Setor", JOptionPane.QUESTION_MESSAGE);
+
+        sector.setName(name);
+        sector.setActive(1);
+        sector.setCreated(LocalDateTime.now());
+        sector.setModified(LocalDateTime.now());
+
+        return sector;
+    }
+
+    private static Sector callUpdateSector(Sector sector){
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor",
+                sector.getName());
+        Object[] options = {0, 1};
+        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Setor", null, JOptionPane.QUESTION_MESSAGE, null, options, options[sector.getActive()]);
+
+        sector.setName(name);
+        sector.setActive(active);
+        sector.setModified(LocalDateTime.now());
+
+        return sector;
+    }
+
+    private static Sector selectSector() throws SQLException, ClassNotFoundException {
+        Object[] selectionValues = getSectorDAO().searchAllReturnArray();
+        String initialSelection = (String) selectionValues[0];
+        Object selection = JOptionPane.showInputDialog(null, "Selecione um setor",
+                null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+        List<Sector> sectors = getSectorDAO().searchByName((String) selection);
+        return sectors.get(0);
+    }
+
+    private static void callMenuExercises() throws Exception {
+        String[] optionsMenuExercises = {"Novo", "Editar", "Excluir", "Voltar"};
+        int menuExercises = JOptionPane.showOptionDialog(null, "Selecione uma ação para Exercícios",
+                "Menu Exercícios (ADMIN)",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuExercises, optionsMenuExercises[0]);
+        Exercise exercise;
+        switch (menuExercises) {
+            case 0: //novo
+                exercise = callCreateExercise();
+                getExerciseDAO().save(exercise);
+                callMenuExercises();
+                break;
+            case 1: //editar
+                exercise = selectExercise();
+                callUpdateExercise(exercise);
+                callMenuExercises();
+                break;
+            case 2: //excluir
+                exercise = selectExercise();
+                getExerciseDAO().remove(exercise);
+
+                callMenuExercises();
+                break;
+            case 3:
+                callMenuEntities();
+                break;
+        }
 
     }
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://localhost:3306/controle_orcamento";
-        Connection connection = DriverManager.getConnection(url, "root", "");
-        return connection;
+
+    private static Exercise callCreateExercise(){
+        Exercise exercise = new Exercise();
+
+        Integer year = Integer.valueOf(JOptionPane.showInputDialog(null, "Informe o ano do Exercício",
+                "Cadastro Exercício", JOptionPane.QUESTION_MESSAGE));
+
+        Object[] arrayStatus = ExerciseStatus.getEnumArray();
+
+        Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do Setor", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[2]);
+        Integer status = ExerciseStatus.getEnumIntValue(auxStatus);
+
+        Object[] optionsActive = {0, 1};
+        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Exercício", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[1]);
+
+        exercise.setYear(year);
+        exercise.setStatus(status);
+        exercise.setActive(active);
+        exercise.setCreated(LocalDateTime.now());
+        exercise.setModified(LocalDateTime.now());
+
+        return exercise;
+    }
+
+    private static Exercise callUpdateExercise(Exercise exercise){
+
+        Integer year = Integer.valueOf(JOptionPane.showInputDialog(null, "Informe o ano do Exercício: ",
+                exercise.getYear()));
+
+        Object[] arrayStatus = ExerciseStatus.getEnumArray();
+
+        Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do Setor: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[exercise.getStatus()]);
+        Integer status = ExerciseStatus.getEnumIntValue(auxStatus);
+
+        Object[] optionsActive = {0, 1};
+        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Exercício: ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[exercise.getActive()]);
+
+        exercise.setYear(year);
+        exercise.setStatus(status);
+        exercise.setActive(active);
+        exercise.setModified(LocalDateTime.now());
+
+        return exercise;
+    }
+
+    private static Exercise selectExercise() throws SQLException, ClassNotFoundException {
+        Object[] selectionValues = getExerciseDAO().searchAllReturnArray();
+        String initialSelection = (String) selectionValues[0];
+        Object selection = JOptionPane.showInputDialog(null, "Selecione um Exercício: ",
+                null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+        List<Exercise> exercises = getExerciseDAO().searchByYear((Integer) selection);
+        return exercises.get(0);
+    }
+
+            private static void callMenuBudgets() throws Exception {
+                String[] optionsMenuBudgets = {"Novo", "Editar", "Excluir", "Voltar"};
+                int menuBudgets = JOptionPane.showOptionDialog(null, "Selecione uma ação para Orçamentos",
+                        "Menu Orçamentos",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuBudgets, optionsMenuBudgets[0]);
+                Budget budget;
+                switch (menuBudgets) {
+                    case 0: //novo
+                        budget = callCreateBudget();
+                        getBudgetDAO().save(budget);
+                        callMenuBudgets();
+                        break;
+                    case 1: //editar
+                        budget = selectBudget();
+                        callUpdateBudget(budget);
+                        callMenuBudgets();
+                        break;
+                    case 2: //excluir
+                        budget = selectBudget();
+                        getBudgetDAO().remove(budget);
+
+                        callMenuBudgets();
+                        break;
+                    case 3:
+                        callMenuEntities();
+                        break;
+                }
+
+            }
+
+            private static Budget callCreateBudget() throws SQLException, ClassNotFoundException {
+                Budget budget = new Budget();
+
+                String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE);
+                String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE);
+                Integer qnt = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE));
+                Double untVal = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor unitário do item: ", "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE));
+
+                Object[] arrayStatus = BudgetStatus.getEnumArray();
+
+                Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do orçamento: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[2]);
+                Integer status = BudgetStatus.getEnumIntValue(auxStatus);
+
+                Object[] sectors = getSectorDAO().searchAllOnlyWithName();
+
+                Object selectionSetor = JOptionPane.showInputDialog(null, "Informe o setor do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, sectors, sectors[0]);
+                List<Sector> auxSectors = getSectorDAO().searchByName((String) selectionSetor);
+                Sector sector = auxSectors.get(0);
+
+                Object[] budgetTypes = getBudgetTypeDAO().searchAllOnlyWithName();
+
+                Object selectionBudgetType = JOptionPane.showInputDialog(null, "Informe o tipo do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, budgetTypes, budgetTypes[0]);
+                List<BudgetType> auxBudgetType = getBudgetTypeDAO().searchByName((String) selectionBudgetType);
+                BudgetType budgetType = auxBudgetType.get(0);
+
+                budget.setName(name);
+                budget.setItem(item);
+                budget.setQnt(qnt);
+                budget.setUntVal(untVal);
+                budget.setStatus(status);
+                budget.setActive(1);
+                budget.setCreated(LocalDateTime.now());
+                budget.setModified(LocalDateTime.now());
+                budget.setSector(sector);
+                budget.setBudgetType(budgetType);
+
+                return budget;
+            }
+
+            private static Budget callUpdateBudget(Budget budget){
+
+                String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", budget.getName());
+                String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", budget.getItem());
+                Integer qnt = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", budget.getQnt()));
+                Double untVal = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor unitário do item: ", budget.getUntVal()));
+
+                Object[] arrayStatus = BudgetStatus.getEnumArray();
+
+                Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do orçamento: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[budget.getStatus()]);
+                Integer status = BudgetStatus.getEnumIntValue(auxStatus);
+
+                Integer active = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", budget.getActive()));
+
+                budget.setName(name);
+                budget.setItem(item);
+                budget.setQnt(qnt);
+                budget.setUntVal(untVal);
+                budget.setStatus(status);
+                budget.setActive(active);
+                budget.setModified(LocalDateTime.now());
+
+                return budget;
+            }
+
+            private static Budget selectBudget() throws SQLException, ClassNotFoundException {
+                Object[] selectionValues = getBudgetDAO().searchAllReturnArray();
+                String initialSelection = (String) selectionValues[0];
+                Object selection = JOptionPane.showInputDialog(null, "Selecione um Exercício: ",
+                        null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+                List<Budget> budgets = getBudgetDAO().searchByName(selection.toString());
+                return budgets.get(0);
+            }
+
+    private static void callMenuTypesBudgets() throws Exception {
+        String[] optionsMenuTypesBudgets = {"Novo", "Editar", "Excluir", "Voltar"};
+        int menuTypesBudgets = JOptionPane.showOptionDialog(null, "Selecione uma ação para Tipos Orçamentos: ",
+                "Menu Tipos Orçamentos",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuTypesBudgets, optionsMenuTypesBudgets[0]);
+
+        BudgetType budgetType;
+        switch (menuTypesBudgets) {
+            case 0: //novo
+                budgetType = callCreateBudgeType();
+                getBudgetTypeDAO().save(budgetType);
+                callMenuTypesBudgets();
+                break;
+            case 1: //editar
+                budgetType = selectBudgetType();
+                callUpdateBudgetType(budgetType);
+                callMenuTypesBudgets();
+                break;
+            case 2: //excluir
+                budgetType = selectBudgetType();
+                getBudgetTypeDAO().remove(budgetType);
+
+                callMenuTypesBudgets();
+                break;
+            case 3:
+               callMenuEntities();
+               break;
+        }
+
+    }
+
+    private static BudgetType callCreateBudgeType(){
+        BudgetType budgetType = new BudgetType();
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento",
+                "Cadastro orçamento", JOptionPane.QUESTION_MESSAGE);
+
+        budgetType.setName(name);
+        budgetType.setActive(1);
+        budgetType.setCreated(LocalDateTime.now());
+        budgetType.setModified(LocalDateTime.now());
+
+        return budgetType;
+    }
+
+    private static BudgetType callUpdateBudgetType(BudgetType budgetType){
+
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do tipo de orçamento",
+                budgetType.getName());
+        Object[] options = {0, 1};
+        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do tipo do orçamento", null, JOptionPane.QUESTION_MESSAGE, null, options, options[budgetType.getActive()]);
+
+        budgetType.setName(name);
+        budgetType.setActive(active);
+        budgetType.setModified(LocalDateTime.now());
+
+        return budgetType;
+    }
+
+    private static BudgetType selectBudgetType() throws SQLException, ClassNotFoundException {
+        Object[] selectionValues = getBudgetTypeDAO().searchAllReturnArray();
+        String initialSelection = (String) selectionValues[0];
+        Object selection = JOptionPane.showInputDialog(null, "Selecione um tipo de orçamento",
+                null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+        List<BudgetType> budgetTypes = getBudgetTypeDAO().searchByName((String) selection);
+        return budgetTypes.get(0);
     }
 
     public static UserDAO getUserDAO() {
@@ -431,5 +575,20 @@ public class AppMain {
     public static SectorDAO getSectorDAO() {
         SectorDAO sectorDAO = new SectorDAO();
         return sectorDAO;
+    }
+
+    public static ExerciseDAO getExerciseDAO() {
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
+        return exerciseDAO;
+    }
+
+    public static BudgetDAO getBudgetDAO() {
+        BudgetDAO budgetDAO = new BudgetDAO();
+        return budgetDAO;
+    }
+
+    public static BudgetTypeDAO getBudgetTypeDAO() {
+        BudgetTypeDAO budgetTypeDAO = new BudgetTypeDAO();
+        return budgetTypeDAO;
     }
 }

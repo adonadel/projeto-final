@@ -40,7 +40,7 @@ public class ReportSectorForm extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<Sector> sector) {
+        public static void emitirRelatorio(List<Sector> sectors) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 JFrame frame = new JFrame("Relatório - Setor");
@@ -49,19 +49,17 @@ public class ReportSectorForm extends JPanel{
                     public void windowClosing(WindowEvent evt) {
                         frame.setVisible(false);
                         try {
-                            AppMain.chamaMenuRelatorios(); /*Verificar na Main*/
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            AppMain.callMenuReports();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 });
 
                 Vector<Sector> vetorDados = new Vector<Sector>();
-                /*for (Sector sector : sectors) {
+                for (Sector sector : sectors) {
                     vetorDados.add(sector);
-                }*/ //Validar
+                }
 
                 frame.getContentPane().add(new ReportSectorForm(vetorDados));
                 frame.pack();

@@ -75,6 +75,23 @@ public class BudgetDAO {
         return budget;
     }
 
+    public List<Budget> searchByName(String name) {
+        BudgetRepository budgetRepository = new BudgetRepository();
+        List<Budget> auxBudget = new ArrayList<>();
+        try{
+            budgets = budgetRepository.searchByName(name);
+
+            for (Budget budget : budgets){
+                if (budget.getName().equals(name)) {
+                    budgets.add(budget);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return auxBudget;
+    }
+
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
         BudgetRepository budgetRepository = new BudgetRepository();
         ArrayList<String> names = new ArrayList<>();
@@ -106,5 +123,33 @@ public class BudgetDAO {
         }
 
         return budgetsName.toArray();
+    }
+
+    public Object[] searchAllWithIdOnYear() {
+        BudgetRepository budgetRepository = new BudgetRepository();
+        List<String> budgetsYear = new ArrayList<>();
+
+        try{
+            budgets = budgetRepository.search();
+
+            for (Budget budget : budgets) {
+                budgetsYear.add(budget.getId() + " - " + budget.getName());
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return budgetsYear.toArray();
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<Budget> budgets = searchAll();
+        List<String> budgetsNames = new ArrayList<>();
+
+        for (Budget budget : budgets) {
+            budgetsNames.add(budget.getName());
+        }
+
+        return budgetsNames.toArray();
     }
 }

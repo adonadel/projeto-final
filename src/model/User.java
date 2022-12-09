@@ -9,6 +9,7 @@ public class User {
     private String username;
     private String password;
     private Integer type;
+    private Integer active;
     private LocalDateTime created;
     private LocalDateTime modified;
     private Sector sector;
@@ -75,5 +76,13 @@ public class User {
 
     public void setSector(Sector sector) {
         this.sector = sector;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

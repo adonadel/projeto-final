@@ -42,12 +42,12 @@ public class ExerciseDAO {
         return exercises;
     }
 
-    public List<Exercise> searchWithName(String name) {
+    public List<Exercise> searchWithYear(Integer year) {
         ExerciseRepository exerciseRepository = new ExerciseRepository();
         List<Exercise> filtredExercises = new ArrayList<>();
 
         try{
-            exercises = exerciseRepository.searchByName(name);
+            exercises = exerciseRepository.searchByYear(year);
 
             for (Exercise exercise : exercises){
                 filtredExercises.add(exercise);
@@ -75,36 +75,65 @@ public class ExerciseDAO {
         return exercise;
     }
 
-    public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
-        ExerciseRepository exerciseRepository = new ExerciseRepository();
-        ArrayList<String> names = new ArrayList<>();
-        try{
-            exercises = exerciseRepository.search();
+    public List<Exercise> searchByYear(Integer year) {
+        ExerciseRepository sectorRepository = new ExerciseRepository();
+        List<Exercise> ListExercises = new ArrayList<>();
 
-            for (Exercise exercise : exercises) {
-                names.add(exercise.getName());
+        try{
+            exercises = sectorRepository.searchByYear(year);
+
+            for (Exercise auxExercise : exercises){
+                if (auxExercise.getYear().equals(year)) {
+                    ListExercises.add(auxExercise);
+                }
             }
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-        return names.toArray();
+        return ListExercises;
     }
 
-    public Object[] searchAllWithIdOnName() {
+    public Object[] searchAllOnlyWithYear() throws SQLException, ClassNotFoundException {
         ExerciseRepository exerciseRepository = new ExerciseRepository();
-        List<String> exercisesName = new ArrayList<>();
-
+        ArrayList<Integer> years = new ArrayList<>();
         try{
             exercises = exerciseRepository.search();
 
             for (Exercise exercise : exercises) {
-                exercisesName.add(exercise.getId() + " - " + exercise.getName());
+                years.add(exercise.getYear());
             }
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        return exercisesName.toArray();
+        return years.toArray();
+    }
+
+    public Object[] searchAllWithIdOnYear() {
+        ExerciseRepository exerciseRepository = new ExerciseRepository();
+        List<String> exercisesYear = new ArrayList<>();
+
+        try{
+            exercises = exerciseRepository.search();
+
+            for (Exercise exercise : exercises) {
+                exercisesYear.add(exercise.getId() + " - " + exercise.getYear());
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return exercisesYear.toArray();
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<Exercise> exercises = searchAll();
+        List<Integer> exercisesYears = new ArrayList<>();
+
+        for (Exercise exercise : exercises) {
+            exercisesYears.add(exercise.getYear());
+        }
+
+        return exercisesYears.toArray();
     }
 }

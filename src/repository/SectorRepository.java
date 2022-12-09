@@ -4,6 +4,7 @@ import model.Sector;
 import model.User;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();
@@ -62,6 +68,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();
@@ -81,6 +92,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();
@@ -101,9 +117,11 @@ public class SectorRepository {
     public void update (Sector sector) throws SQLException, ClassNotFoundException {
         Connection connection = getConnection();
 
-        PreparedStatement stmt = connection.prepareStatement("update sectors SET password = ? WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("update sectors SET name = ?, active = ?, modified = ? WHERE id = ?");
         stmt.setString(1, sector.getName());
-        stmt.setInt(2, sector.getId());
+        stmt.setInt(2, sector.getActive());
+        stmt.setString(3, sector.getModified().toString());
+        stmt.setInt(4, sector.getId());
 
         int i = stmt.executeUpdate();
         System.out.println(i + " linhas atualizadas");
@@ -115,6 +133,9 @@ public class SectorRepository {
         PreparedStatement stmt = connection.prepareStatement("DELETE FROM sectors WHERE id = ?");
         stmt.setInt(1, sector.getId());
         stmt.executeUpdate();
+
+        int i = stmt.executeUpdate();
+        System.out.println(i + " linhas removidas");
         connection.close();
     }
 }

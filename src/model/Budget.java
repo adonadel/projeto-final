@@ -1,19 +1,19 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Budget {
     private Integer id;
     private String name;
     private String item;
     private Integer qnt;
-    private Double unt_val;
+    private Double untVal;
     private Integer status;
     private Integer active;
-    private LocalDate created;
-    private LocalDate modified;
+    private LocalDateTime created;
+    private LocalDateTime modified;
     private Sector sector;
-    private Budget_type budget_type;
+    private BudgetType budgetType;
 
     public Integer getId() {
         return id;
@@ -47,12 +47,12 @@ public class Budget {
         this.qnt = qnt;
     }
 
-    public Double getUnt_val() {
-        return unt_val;
+    public Double getUntVal() {
+        return untVal;
     }
 
-    public void setUnt_val(Double unt_val) {
-        this.unt_val = unt_val;
+    public void setUntVal(Double untVal) {
+        this.untVal = untVal;
     }
 
     public Integer getStatus() {
@@ -71,19 +71,19 @@ public class Budget {
         this.active = active;
     }
 
-    public LocalDate getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDate created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public LocalDate getModified() {
+    public LocalDateTime getModified() {
         return modified;
     }
 
-    public void setModified(LocalDate modified) {
+    public void setModified(LocalDateTime modified) {
         this.modified = modified;
     }
 
@@ -95,11 +95,11 @@ public class Budget {
         this.sector = sector;
     }
 
-    public BudgetType getBudget_type() {
-        return budget_type;
+    public BudgetType getBudgetType() {
+        return budgetType;
     }
 
-    public void setBudget_type(BudgetType budget_type) {
-        this.budget_type = budget_type;
+    public void setBudgetType(BudgetType budgetType) {
+        this.budgetType = budgetType;
     }
 }

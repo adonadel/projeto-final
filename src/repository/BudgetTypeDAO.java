@@ -1,6 +1,7 @@
 package repository;
 
 import model.BudgetType;
+import model.Sector;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,9 +47,9 @@ public class BudgetTypeDAO {
         List<BudgetType> filtredBudgetTypes = new ArrayList<>();
 
         try{
-            budgetsType = budgetRepository.searchByName(name);
+            budgetTypes = budgetRepository.searchByName(name);
 
-            for (BudgetType budget : budgetsType){
+            for (BudgetType budgetType : budgetTypes){
                 filtredBudgetTypes.add(budgetType);
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -72,6 +73,24 @@ public class BudgetTypeDAO {
             throw new RuntimeException(e);
         }
         return budgetType;
+    }
+
+        public List<BudgetType> searchByName(String name) {
+        BudgetTypeRepository budgetTypeRepository = new BudgetTypeRepository();
+        List<BudgetType> ListBudgetTypes = new ArrayList<>();
+
+        try{
+            budgetTypes = budgetTypeRepository.searchByName(name);
+
+            for (BudgetType auxBudgetType : budgetTypes){
+                if (auxBudgetType.getName().equals(name)) {
+                    ListBudgetTypes.add(auxBudgetType);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return ListBudgetTypes;
     }
 
     public Object[] searchAllOnlyWithName() throws SQLException, ClassNotFoundException {
@@ -105,5 +124,16 @@ public class BudgetTypeDAO {
         }
 
         return budgetTypesName.toArray();
+    }
+
+    public Object[] searchAllReturnArray() throws SQLException, ClassNotFoundException {
+        List<BudgetType> budgetTypes = searchAll();
+        List<String> budgetTypesNomes = new ArrayList<>();
+
+        for (BudgetType budgetType : budgetTypes) {
+            budgetTypesNomes.add(budgetType.getName());
+        }
+
+        return budgetTypesNomes.toArray();
     }
 }

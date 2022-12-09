@@ -4,6 +4,7 @@ package repository;
 import model.Budget;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,13 @@ public class BudgetRepository {
         stmt.setString(2, budget.getName());
         stmt.setString(3, budget.getItem());
         stmt.setInt(4, budget.getQnt());
-        stmt.setDouble(5, budget.getUnt_val());
+        stmt.setDouble(5, budget.getUntVal());
         stmt.setInt(6, budget.getStatus());
         stmt.setInt(7,budget.getActive());
         stmt.setString(8, DateTimeFormatter.ISO_LOCAL_DATE.format(budget.getCreated()));
         stmt.setString(9, DateTimeFormatter.ISO_LOCAL_DATE.format(budget.getModified()));
         stmt.setInt(10, budget.getSector().getId());
-        stmt.setInt(11, budget.getBudget_type().getId());
+        stmt.setInt(11, budget.getBudgetType().getId());
 
 
         int i = stmt.executeUpdate();
@@ -51,13 +52,13 @@ public class BudgetRepository {
             budget.setName(resultSet.getString(2));
             budget.setItem(resultSet.getString(3));
             budget.setQnt(resultSet.getInt(4));
-            budget.setUnt_val(resultSet.getDouble(5));
+            budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudget_type().setId(resultSet.getInt(11));
+            budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
         }
         connection.close();
@@ -78,13 +79,13 @@ public class BudgetRepository {
             budget.setName(resultSet.getString(2));
             budget.setItem(resultSet.getString(3));
             budget.setQnt(resultSet.getInt(4));
-            budget.setUnt_val(resultSet.getDouble(5));
+            budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudget_type().setId(resultSet.getInt(11));
+            budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
         }
         connection.close();
@@ -105,13 +106,13 @@ public class BudgetRepository {
             budget.setName(resultSet.getString(2));
             budget.setItem(resultSet.getString(3));
             budget.setQnt(resultSet.getInt(4));
-            budget.setUnt_val(resultSet.getDouble(5));
+            budget.setUntVal(resultSet.getDouble(5));
             budget.setStatus(resultSet.getInt(6));
             budget.setActive(resultSet.getInt(7));
-            budget.setCreated(resultSet.getDate(8).toLocalDate());
-            budget.setModified(resultSet.getDate(9).toLocalDate());
+            budget.setCreated(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            budget.setModified(LocalDateTime.from(resultSet.getDate(9).toLocalDate()));
             budget.getSector().setId(resultSet.getInt(10));
-            budget.getBudget_type().setId(resultSet.getInt(11));
+            budget.getBudgetType().setId(resultSet.getInt(11));
             budgets.add(budget);
         }
         connection.close();

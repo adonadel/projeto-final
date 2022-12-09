@@ -1,37 +1,37 @@
-import model.User;
-import relatorio.TableUser;
+import model.Budget;
+import relatorio.TableBudget;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-public class ReportUserForm extends JPanel{
+public class ReportBudgetForm  extends JPanel{
         private static final long serialVersionUID = 1L;
 
         public static final String[] nomeColunas =
-                {"ID", "Nome", "Nome de Usuário", "Senha" , "Tipo de Usuário" , "Criação", "Modificação", "Setor" , ""};
+                {"ID", "Nome", "Nome", "Ativo", "Criação", "Modificação", ""};
+
         protected JTable table;
         protected JScrollPane scroller;
-        protected TableUser tabela;
+        protected TableBudget tabela;
 
-        public ReportUserForm(Vector<User> vetorDados) {
+        public ReportBudgetForm(Vector<Budget> vetorDados) {
             iniciarComponentes(vetorDados);
         }
 
-        public void iniciarComponentes(Vector<User> vetorDados) {
-            tabela = new TableUser(nomeColunas, vetorDados);
+        public void iniciarComponentes(Vector<Budget> vetorDados) {
+            tabela = new TableBudget(nomeColunas, vetorDados);
             table = new JTable();
             table.setModel(tabela);
             table.setSurrendersFocusOnKeystroke(true);
             scroller = new JScrollPane(table);
             table.setPreferredScrollableViewportSize(new Dimension(500, 300));
 
-            TableColumn colunaEscondida = table.getColumnModel().getColumn(TableUser.INDEX_ESCONDIDO);
+            TableColumn colunaEscondida = table.getColumnModel().getColumn(TableBudget.INDEX_ESCONDIDO);
             colunaEscondida.setMinWidth(2);
             colunaEscondida.setPreferredWidth(2);
             colunaEscondida.setMaxWidth(2);
@@ -39,10 +39,10 @@ public class ReportUserForm extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<User> users) {
+        public static void emitirRelatorio(List<Budget> budgets) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                JFrame frame = new JFrame("Relatório - Usuários");
+                JFrame frame = new JFrame("Relatório - Tipo de Orçamento");
 
                 frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent evt) {
@@ -55,12 +55,12 @@ public class ReportUserForm extends JPanel{
                     }
                 });
 
-                Vector<User> vetorDados = new Vector<User>();
-                for (User user : users) {
-                    vetorDados.add(user);
+                Vector<Budget> vetorDados = new Vector<Budget>();
+                for (Budget budget : budgets) {
+                    vetorDados.add(budget);
                 }
 
-                frame.getContentPane().add(new ReportUserForm(vetorDados));
+                frame.getContentPane().add(new ReportBudgetForm(vetorDados));
                 frame.pack();
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
