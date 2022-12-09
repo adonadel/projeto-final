@@ -1,12 +1,12 @@
 package model;
 
-public enum UserType {
-    GERENTE("Gerente"),
-    FUNCIONARIO("Funcionario");
+public enum Active {
+    DESATIVADO("Desativado"),
+    ATIVADO("Ativado");
 
     private String term;
 
-    private UserType(String term){
+    private Active(String term){
         this.term = term;
     }
 
@@ -21,27 +21,27 @@ public enum UserType {
 
     public static Object[] getEnumArray() {
         String[] terms = new String[2];
-        terms[0] = UserType.GERENTE.getTermo();
-        terms[1] = UserType.FUNCIONARIO.getTermo();
+        terms[0] = Active.DESATIVADO.getTermo();
+        terms[1] = Active.ATIVADO.getTermo();
 
         return terms;
     }
 
     public static Integer getEnumIntValue(Object term) {
         int value;
-        if ("Gerente".equals(term)) {
+        if ("Desativado".equals(term)) {
             value = 0;
-        } else {
+        }else {
             value = 1;
         }
         return value;
     }
 
     public static String getEnumByValue(int value) {
-        if (value == 1) {
-            return "Funcionário";
+        if (value == 0) {
+            return "Desativado";
         } else {
-            return "Gerente";
+            return "Ativado";
         }
     }
 }

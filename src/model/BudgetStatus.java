@@ -42,4 +42,16 @@ public enum BudgetStatus {
         }
         return value;
     }
+
+    public static String getEnumByValue(int value) {
+        if (value == 0) {
+            return "Reprovado";
+        } else if (value == 1) {
+            return "Aprovado";
+        } else if (value == 2) {
+            return "Em espera";
+        } else {
+            return "Em espera";
+        }
+    }
 }

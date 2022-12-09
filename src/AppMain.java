@@ -38,7 +38,7 @@ public class AppMain {
 
         String[] optionsMenu = {"Entidades", "Relatórios", "Sair"};
         int menuOptions = JOptionPane.showOptionDialog(null, "Selecione uma opção :",
-                "Menu Opções (ADMIN)",
+                "Menu Opções ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenu, optionsMenu[0]);
         switch (menuOptions) {
             case 0:
@@ -57,7 +57,7 @@ public class AppMain {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
         int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
-                "Menu entidades (ADMIN)",
+                "Menu entidades ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
@@ -90,28 +90,23 @@ public class AppMain {
 
         String[] optionsMenuEntity = {"Usuários", "Setores", "Exercícios", "Orçamentos", "Tipos Orçamentos", "Voltar"};
         int menuEntity = JOptionPane.showOptionDialog(null, "Selecione uma entidade para mais ações:",
-                "Menu entidades (ADMIN)",
+                "Menu entidades ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuEntity, optionsMenuEntity[0]);
         switch (menuEntity) {
             case 0:
                 callUsersReports();
-                callMenuReports();
                 break;
             case 1:
                 callSectorReports();
-                callMenuReports();
                 break;
             case 2:
                 callExercisesReports();
-                callMenuReports();
                 break;
             case 3:
                 callBudgetsReports();
-                callMenuReports();
                 break;
             case 4:
                 callTypesBudgetsReports();
-                callMenuReports();
                 break;
             case 5:
                 callMenuOptions();
@@ -159,7 +154,7 @@ public class AppMain {
                 break;
             case 1:
                 user = selectUser();
-                user = callUpdateSector(user);
+                user = callUpdateUser(user);
 
                 if (user != null)
                     getUserDAO().save(user);
@@ -202,6 +197,7 @@ public class AppMain {
         user.setUsername(userName);
         user.setSector(sector);
         user.setType(type);
+        user.setActive(1);
         user.setPassword(password);
         user.setCreated(LocalDateTime.now());
         user.setModified(LocalDateTime.now());
@@ -209,13 +205,17 @@ public class AppMain {
         return user;
     }
 
-    private static User callUpdateSector(User user) throws SQLException, ClassNotFoundException{
+    private static User callUpdateUser(User user) throws SQLException, ClassNotFoundException{
         String name = JOptionPane.showInputDialog(null, "Informe o novo nome do usuário", user.getName());
         String password = JOptionPane.showInputDialog(null, "Informe a nova senha", user.getPassword());
 
         Object[] arrayType = UserType.getEnumArray();
         Object auxType = JOptionPane.showInputDialog(null, "Informe o novo tipo do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arrayType, arrayType[1]);
         Integer type = UserType.getEnumIntValue(auxType);
+
+        Object[] options = Active.getEnumArray();
+        Object activeAux = JOptionPane.showInputDialog(null, "Informe se o usuário está ativo", null, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        Integer active = Active.getEnumIntValue(activeAux);
 
         Object[] arraySectors = getSectorDAO().searchAllReturnArray();
         Object auxSector = JOptionPane.showInputDialog(null, "Informe o setor do usuário", "Cadastro Usuário", JOptionPane.QUESTION_MESSAGE, null, arraySectors, arraySectors[0]);
@@ -225,6 +225,7 @@ public class AppMain {
         user.setName(name);
         user.setPassword(password);
         user.setType(type);
+        user.setActive(active);
         user.setSector(sector);
         user.setModified(LocalDateTime.now());
 
@@ -243,7 +244,7 @@ public class AppMain {
     private static void callMenuSectors() throws Exception {
         String[] optionsMenuSectors = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuSectors = JOptionPane.showOptionDialog(null, "Selecione uma ação para Setores",
-                "Menu Setores (ADMIN)",
+                "Menu Setores ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuSectors, optionsMenuSectors[0]);
         Sector sector = null;
         switch (menuSectors) {
@@ -292,10 +293,12 @@ public class AppMain {
 
     private static Sector callUpdateSector(Sector sector){
 
-        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor",
+        String name = JOptionPane.showInputDialog(null, "Informe o nome do Setor: ",
                 sector.getName());
-        Object[] options = {0, 1};
-        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Setor", null, JOptionPane.QUESTION_MESSAGE, null, options, options[sector.getActive()]);
+
+        Object[] options = Active.getEnumArray();
+        Object activeAux = JOptionPane.showInputDialog(null, "Informe se o Setor está ativo: ", null, JOptionPane.QUESTION_MESSAGE, null, options, options[sector.getActive()]);
+        Integer active = Active.getEnumIntValue(activeAux);
 
         sector.setName(name);
         sector.setActive(active);
@@ -316,7 +319,7 @@ public class AppMain {
     private static void callMenuExercises() throws Exception {
         String[] optionsMenuExercises = {"Novo", "Editar", "Excluir", "Voltar"};
         int menuExercises = JOptionPane.showOptionDialog(null, "Selecione uma ação para Exercícios",
-                "Menu Exercícios (ADMIN)",
+                "Menu Exercícios ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, optionsMenuExercises, optionsMenuExercises[0]);
         Exercise exercise;
         switch (menuExercises) {
@@ -327,7 +330,11 @@ public class AppMain {
                 break;
             case 1: //editar
                 exercise = selectExercise();
-                callUpdateExercise(exercise);
+                exercise = callUpdateExercise(exercise);
+
+                if (exercise != null)
+                    getExerciseDAO().save(exercise);
+
                 callMenuExercises();
                 break;
             case 2: //excluir
@@ -343,7 +350,7 @@ public class AppMain {
 
     }
 
-    private static Exercise callCreateExercise(){
+    private static Exercise callCreateExercise() throws SQLException, ClassNotFoundException {
         Exercise exercise = new Exercise();
 
         Integer year = Integer.valueOf(JOptionPane.showInputDialog(null, "Informe o ano do Exercício",
@@ -353,15 +360,19 @@ public class AppMain {
 
         Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do Setor", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[2]);
         Integer status = ExerciseStatus.getEnumIntValue(auxStatus);
+        
+        Object[] budgets = getBudgetDAO().searchAllOnlyWithName();
 
-        Object[] optionsActive = {0, 1};
-        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Exercício", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[1]);
+        Object selectionBudget = JOptionPane.showInputDialog(null, "Informe o orçamento do exercício: ", "Cadastro de exercício", JOptionPane.QUESTION_MESSAGE, null, budgets, budgets[0]);
+        List<Budget> auxBudgets = getBudgetDAO().searchByName((String) selectionBudget);
+        Budget budget = auxBudgets.get(0);
 
         exercise.setYear(year);
         exercise.setStatus(status);
-        exercise.setActive(active);
+        exercise.setActive(1);
         exercise.setCreated(LocalDateTime.now());
         exercise.setModified(LocalDateTime.now());
+        exercise.setBudget(budget);
 
         return exercise;
     }
@@ -376,8 +387,9 @@ public class AppMain {
         Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do Setor: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[exercise.getStatus()]);
         Integer status = ExerciseStatus.getEnumIntValue(auxStatus);
 
-        Object[] optionsActive = {0, 1};
-        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do Exercício: ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[exercise.getActive()]);
+        Object[] optionsActive = Active.getEnumArray();
+        Object activeAux = JOptionPane.showInputDialog(null, "Informe o status do Exercício: ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[exercise.getActive()]);
+        Integer active = Active.getEnumIntValue(activeAux);
 
         exercise.setYear(year);
         exercise.setStatus(status);
@@ -389,7 +401,7 @@ public class AppMain {
 
     private static Exercise selectExercise() throws SQLException, ClassNotFoundException {
         Object[] selectionValues = getExerciseDAO().searchAllReturnArray();
-        String initialSelection = (String) selectionValues[0];
+        String initialSelection = String.valueOf(selectionValues[0]);
         Object selection = JOptionPane.showInputDialog(null, "Selecione um Exercício: ",
                 null, JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
         List<Exercise> exercises = getExerciseDAO().searchByYear((Integer) selection);
@@ -410,8 +422,12 @@ public class AppMain {
                         break;
                     case 1: //editar
                         budget = selectBudget();
-                        callUpdateBudget(budget);
-                        callMenuBudgets();
+                        budget = callUpdateBudget(budget);
+
+                        if (budget != null)
+                            getBudgetDAO().save(budget);
+
+                        callMenuTypesBudgets();
                         break;
                     case 2: //excluir
                         budget = selectBudget();
@@ -465,7 +481,7 @@ public class AppMain {
                 return budget;
             }
 
-            private static Budget callUpdateBudget(Budget budget){
+            private static Budget callUpdateBudget(Budget budget) throws SQLException, ClassNotFoundException {
 
                 String name = JOptionPane.showInputDialog(null, "Informe o nome do orçamento: ", budget.getName());
                 String item = JOptionPane.showInputDialog(null, "Informe o item do orçamento: ", budget.getItem());
@@ -477,7 +493,21 @@ public class AppMain {
                 Object auxStatus = JOptionPane.showInputDialog(null, "Informe o status do orçamento: ", null, JOptionPane.QUESTION_MESSAGE, null, arrayStatus, arrayStatus[budget.getStatus()]);
                 Integer status = BudgetStatus.getEnumIntValue(auxStatus);
 
-                Integer active = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de itens: ", budget.getActive()));
+                Object[] optionsActive = Active.getEnumArray();
+                Object activeAux = JOptionPane.showInputDialog(null, "Informe se o orçamento ativo ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[budget.getActive()]);
+                Integer active = Active.getEnumIntValue(activeAux);
+
+                Object[] sectors = getSectorDAO().searchAllOnlyWithName();
+
+                Object selectionSetor = JOptionPane.showInputDialog(null, "Informe o setor do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, sectors, sectors[0]);
+                List<Sector> auxSectors = getSectorDAO().searchByName((String) selectionSetor);
+                Sector sector = auxSectors.get(0);
+
+                Object[] budgetTypes = getBudgetTypeDAO().searchAllOnlyWithName();
+
+                Object selectionBudgetType = JOptionPane.showInputDialog(null, "Informe o tipo do orçamento: ", "Cadastro de orçamento", JOptionPane.QUESTION_MESSAGE, null, budgetTypes, budgetTypes[0]);
+                List<BudgetType> auxBudgetType = getBudgetTypeDAO().searchByName((String) selectionBudgetType);
+                BudgetType budgetType = auxBudgetType.get(0);
 
                 budget.setName(name);
                 budget.setItem(item);
@@ -486,6 +516,8 @@ public class AppMain {
                 budget.setStatus(status);
                 budget.setActive(active);
                 budget.setModified(LocalDateTime.now());
+                budget.setSector(sector);
+                budget.setBudgetType(budgetType);
 
                 return budget;
             }
@@ -514,7 +546,11 @@ public class AppMain {
                 break;
             case 1: //editar
                 budgetType = selectBudgetType();
-                callUpdateBudgetType(budgetType);
+                budgetType = callUpdateBudgetType(budgetType);
+
+                if (budgetType != null)
+                    getBudgetTypeDAO().save(budgetType);
+
                 callMenuTypesBudgets();
                 break;
             case 2: //excluir
@@ -545,11 +581,12 @@ public class AppMain {
     }
 
     private static BudgetType callUpdateBudgetType(BudgetType budgetType){
-
         String name = JOptionPane.showInputDialog(null, "Informe o nome do tipo de orçamento",
                 budgetType.getName());
-        Object[] options = {0, 1};
-        Integer active = (Integer) JOptionPane.showInputDialog(null, "Informe o status do tipo do orçamento", null, JOptionPane.QUESTION_MESSAGE, null, options, options[budgetType.getActive()]);
+
+        Object[] optionsActive = Active.getEnumArray();
+        Object activeAux = JOptionPane.showInputDialog(null, "Informe se o tipo de orçamento está ativo ", null, JOptionPane.QUESTION_MESSAGE, null, optionsActive, optionsActive[budgetType.getActive()]);
+        Integer active = Active.getEnumIntValue(activeAux);
 
         budgetType.setName(name);
         budgetType.setActive(active);

@@ -76,11 +76,11 @@ public class ExerciseDAO {
     }
 
     public List<Exercise> searchByYear(Integer year) {
-        ExerciseRepository sectorRepository = new ExerciseRepository();
+        ExerciseRepository exerciseRepository = new ExerciseRepository();
         List<Exercise> ListExercises = new ArrayList<>();
 
         try{
-            exercises = sectorRepository.searchByYear(year);
+            exercises = exerciseRepository.searchByYear(year);
 
             for (Exercise auxExercise : exercises){
                 if (auxExercise.getYear().equals(year)) {

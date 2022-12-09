@@ -1,5 +1,6 @@
 package relatorio;
 
+import model.Active;
 import model.BudgetType;
 
 import javax.swing.table.AbstractTableModel;
@@ -46,7 +47,7 @@ public class TableBudgetType extends AbstractTableModel{
                 case INDEX_NAME:
                     return registroBudgetType.getName();
                 case INDEX_ACTIVE:
-                    return registroBudgetType.getActive();
+                    return Active.getEnumByValue(registroBudgetType.getActive());
                 case INDEX_CREATED:
                     return registroBudgetType.getCreated();
                 case INDEX_MODIFIED:

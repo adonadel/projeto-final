@@ -42,4 +42,16 @@ public enum ExerciseStatus {
         }
         return value;
     }
+
+    public static String getEnumByValue(int value) {
+        if (value == 0) {
+            return "Passado";
+        } else if (value == 1) {
+            return "Exercício";
+        } else if (value == 2) {
+            return "Planejado";
+        } else {
+            return "Planejado";
+        }
+    }
 }
