@@ -50,7 +50,13 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setActive(resultSet.getInt(6));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(7), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(8), formatter);
+            user.setCreated(LocalDateTime.from(created));
+            user.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(9));
             user.setSector(sector);
             users.add(user);
         }
@@ -73,7 +79,13 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setActive(resultSet.getInt(6));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(7), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(8), formatter);
+            user.setCreated(LocalDateTime.from(created));
+            user.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(9));
             user.setSector(sector);
             users.add(user);
         }
@@ -96,7 +108,13 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            Sector sector = getSectorDAO().searchById(resultSet.getInt(6));
+            user.setActive(resultSet.getInt(6));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(7), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(8), formatter);
+            user.setCreated(LocalDateTime.from(created));
+            user.setModified(LocalDateTime.from(modified));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(9));
             user.setSector(sector);
             users.add(user);
         }
