@@ -46,8 +46,11 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
-            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            exercise.setCreated(LocalDateTime.from(created));
+            exercise.setModified(LocalDateTime.from(modified));
             exercises.add(exercise);
         }
         connection.close();
@@ -67,8 +70,11 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
-            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            exercise.setCreated(LocalDateTime.from(created));
+            exercise.setModified(LocalDateTime.from(modified));
             exercises.add(exercise);
         }
         connection.close();
@@ -88,8 +94,11 @@ public class ExerciseRepository {
             exercise.setId(resultSet.getInt(1));
             exercise.setYear(resultSet.getInt(2));
             exercise.setActive(resultSet.getInt(3));
-            exercise.setCreated(LocalDateTime.from(resultSet.getDate(4).toLocalDate()));
-            exercise.setModified(LocalDateTime.from(resultSet.getDate(5).toLocalDate()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            exercise.setCreated(LocalDateTime.from(created));
+            exercise.setModified(LocalDateTime.from(modified));
             exercises.add(exercise);
         }
         connection.close();

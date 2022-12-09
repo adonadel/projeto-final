@@ -4,6 +4,7 @@ import model.Sector;
 import model.User;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();
@@ -62,6 +68,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();
@@ -81,6 +92,11 @@ public class SectorRepository {
             sector.setId(resultSet.getInt(1));
             sector.setName(resultSet.getString(2));
             sector.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            sector.setCreated(LocalDateTime.from(created));
+            sector.setModified(LocalDateTime.from(modified));
             sectors.add(sector);
         }
         connection.close();

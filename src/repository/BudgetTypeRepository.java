@@ -45,6 +45,11 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
             budgets.add(budget);
         }
         connection.close();
@@ -64,6 +69,11 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
             budgets.add(budget);
         }
         connection.close();
@@ -83,6 +93,11 @@ public class BudgetTypeRepository {
             budget.setId(resultSet.getInt(1));
             budget.setName(resultSet.getString(2));
             budget.setActive(resultSet.getInt(3));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime created = LocalDateTime.parse(resultSet.getString(4), formatter);
+            LocalDateTime modified = LocalDateTime.parse(resultSet.getString(5), formatter);
+            budget.setCreated(LocalDateTime.from(created));
+            budget.setModified(LocalDateTime.from(modified));
             budgets.add(budget);
         }
         connection.close();
