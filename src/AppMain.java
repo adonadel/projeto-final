@@ -103,19 +103,19 @@ public class AppMain {
                 callMenuReports();
                 break;
             case 1:
-//                callSectorReports();
+                callSectorReports();
                 callMenuReports();
                 break;
             case 2:
-//                callExercisesReports();
+                callExercisesReports();
                 callMenuReports();
                 break;
             case 3:
-//                callBudgetsReports();
+                callBudgetsReports();
                 callMenuReports();
                 break;
             case 4:
-//                callTypesBudgetsReports();
+                callTypesBudgetsReports();
                 callMenuReports();
                 break;
             case 5:
