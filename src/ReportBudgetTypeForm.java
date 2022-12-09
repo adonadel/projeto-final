@@ -40,7 +40,7 @@ public class ReportBudgetTypeForm extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<BudgetType> sector) {
+        public static void emitirRelatorio(List<BudgetType> budgeTypes) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 JFrame frame = new JFrame("Relatório - Tipo de Orçamento");
@@ -57,9 +57,9 @@ public class ReportBudgetTypeForm extends JPanel{
                 });
 
                 Vector<BudgetType> vetorDados = new Vector<BudgetType>();
-                /*for (Sector sector : sectors) {
-                    vetorDados.add(sector);
-                }*/ //Validar
+                for (BudgetType budgetType : budgeTypes) {
+                    vetorDados.add(budgetType);
+                }
 
                 frame.getContentPane().add(new ReportBudgetTypeForm(vetorDados));
                 frame.pack();

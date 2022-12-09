@@ -40,7 +40,7 @@ public class ReportExerciseForm extends JPanel{
             add(scroller, BorderLayout.CENTER);
         }
 
-        public static void emitirRelatorio(List<Exercise> sector) {
+        public static void emitirRelatorio(List<Exercise> exercises) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 JFrame frame = new JFrame("Relatório - Exercício");
@@ -58,9 +58,9 @@ public class ReportExerciseForm extends JPanel{
                 });
 
                 Vector<Exercise> vetorDados = new Vector<Exercise>();
-                /*for (Sector sector : sectors) {
-                    vetorDados.add(sector);
-                }*/ //Validar
+                for (Exercise exercise : exercises) {
+                    vetorDados.add(exercise);
+                }
 
                 frame.getContentPane().add(new ReportExerciseForm(vetorDados));
                 frame.pack();

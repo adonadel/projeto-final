@@ -159,9 +159,10 @@ public class UserRepository {
             user.setUsername(resultSet.getString(3));
             user.setPassword(resultSet.getString(4));
             user.setType(resultSet.getInt(5));
-            user.setCreated(LocalDateTime.from(resultSet.getDate(6).toLocalDate()));
-            user.setModified(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
-            Sector sector = getSectorDAO().searchById(resultSet.getInt(8));
+            user.setActive(resultSet.getInt(6));
+            user.setCreated(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
+            user.setModified(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+            Sector sector = getSectorDAO().searchById(resultSet.getInt(9));
             user.setSector(sector);
             users.add(user);
         }
@@ -185,9 +186,10 @@ public class UserRepository {
                 user.setUsername(resultSet.getString(3));
                 user.setPassword(resultSet.getString(4));
                 user.setType(resultSet.getInt(5));
-                user.setCreated(LocalDateTime.from(resultSet.getDate(6).toLocalDate()));
-                user.setModified(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
-                Sector sector = getSectorDAO().searchById(resultSet.getInt(8));
+                user.setActive(resultSet.getInt(6));
+                user.setCreated(LocalDateTime.from(resultSet.getDate(7).toLocalDate()));
+                user.setModified(LocalDateTime.from(resultSet.getDate(8).toLocalDate()));
+                Sector sector = getSectorDAO().searchById(resultSet.getInt(9));
                 user.setSector(sector);
             }
             connection.close();
